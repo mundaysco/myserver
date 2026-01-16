@@ -1,3 +1,131 @@
+const express = require('express');
+const axios = require('axios');
+require('dotenv').config();
+
+const app = express();
+app.use(express.json());
+
+// ====== MIDDLEWARE ======
+app.use((req, res, next) => {
+  console.log(`${new Date().toISOString()} - ${req.method} ${req.url}`);
+  next();
+});
+
+// ====== ROUTES ======
+
+
+muhei@WXSDOM MINGW64 ~
+$ ^C
+
+muhei@WXSDOM MINGW64 ~
+$ cd /c/Users/muhei/Desktop/Max-Clover
+
+muhei@WXSDOM MINGW64 ~/Desktop/Max-Clover
+$ ls -la
+# Look for .git folder
+total 119
+drwxr-xr-x 1 muhei 197609     0 Jan 16 11:04 ./
+drwxr-xr-x 1 muhei 197609     0 Jan 16 03:21 ../
+-rw-r--r-- 1 muhei 197609   216 Jan 16 03:36 .env
+-rw-r--r-- 1 muhei 197609   299 Jan 16 11:04 .gitignore
+drwxr-xr-x 1 muhei 197609     0 Jan 16 03:22 node_modules/
+-rw-r--r-- 1 muhei 197609 31833 Jan 16 03:22 package-lock.json
+-rw-r--r-- 1 muhei 197609   224 Jan 16 03:21 package.json
+-rw-r--r-- 1 muhei 197609  3056 Jan 16 03:22 server.js
+
+muhei@WXSDOM MINGW64 ~/Desktop/Max-Clover
+$ ^C
+
+muhei@WXSDOM MINGW64 ~/Desktop/Max-Clover
+$ ^[[200~git init~
+bash: $'\E[200~git': command not found
+
+muhei@WXSDOM MINGW64 ~/Desktop/Max-Clover
+$ git init
+Initialized empty Git repository in C:/Users/muhei/Desktop/Max-Clover/.git/
+
+muhei@WXSDOM MINGW64 ~/Desktop/Max-Clover (master)
+$ git status
+On branch master
+
+No commits yet
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+        .gitignore
+        package-lock.json
+        package.json
+        server.js
+
+nothing added to commit but untracked files present (use "git add" to track)
+
+muhei@WXSDOM MINGW64 ~/Desktop/Max-Clover (master)
+$ ^C
+
+muhei@WXSDOM MINGW64 ~/Desktop/Max-Clover (master)
+$ git config user.name "mundays"
+git config user.email "mundaysco@gmail.com"
+
+muhei@WXSDOM MINGW64 ~/Desktop/Max-Clover (master)
+$ git add .
+git commit -m "Initial commit: Max-Clover Node.js server"
+warning: in the working copy of '.gitignore', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'package-lock.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'package.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'server.js', LF will be replaced by CRLF the next time Git touches it
+[master (root-commit) 2f0662d] Initial commit: Max-Clover Node.js server
+ 4 files changed, 1020 insertions(+)
+ create mode 100644 .gitignore
+ create mode 100644 package-lock.json
+ create mode 100644 package.json
+ create mode 100644 server.js
+
+muhei@WXSDOM MINGW64 ~/Desktop/Max-Clover (master)
+$ ^C
+
+muhei@WXSDOM MINGW64 ~/Desktop/Max-Clover (master)
+$ git remote add origin https://github.com/mundaysco/myserver.git
+
+muhei@WXSDOM MINGW64 ~/Desktop/Max-Clover (master)
+$ ^[[200~git branch -M main
+bash: $'\E[200~git': command not found
+
+muhei@WXSDOM MINGW64 ~/Desktop/Max-Clover (master)
+$ git push -u origin main
+error: src refspec main does not match any
+error: failed to push some refs to 'https://github.com/mundaysco/myserver.git'
+
+muhei@WXSDOM MINGW64 ~/Desktop/Max-Clover (master)
+$ git branch -M main
+git push -u origin main
+info: please complete authentication in your browser...
+Enumerating objects: 6, done.
+Counting objects: 100% (6/6), done.
+Delta compression using up to 8 threads
+Compressing objects: 100% (6/6), done.
+Writing objects: 100% (6/6), 10.57 KiB | 1.32 MiB/s, done.
+Total 6 (delta 0), reused 0 (delta 0), pack-reused 0 (from 0)
+To https://github.com/mundaysco/myserver.git
+ * [new branch]      main -> main
+branch 'main' set up to track 'origin/main'.
+
+muhei@WXSDOM MINGW64 ~/Desktop/Max-Clover (main)
+$ # Check remote is set correctly
+git remote -v
+
+# Should show:
+# origin  https://github.com/mundaysco/myserver.git (fetch)
+# origin  https://github.com/mundaysco/myserver.git (push)
+origin  https://github.com/mundaysco/myserver.git (fetch)
+origin  https://github.com/mundaysco/myserver.git (push)
+
+muhei@WXSDOM MINGW64 ~/Desktop/Max-Clover (main)
+$ # Check remote is set correctly
+
+# Open in browser or check with curl
+curl https://myserver-wk8h.onrender.com
+# Create a new server.js with the route added
+cat > server.js << 'EOF'
 require("dotenv").config();
 const express = require("express");
 const axios = require("axios");
@@ -9,271 +137,116 @@ const PORT = process.env.PORT || 3000;
 const APP_ID = process.env.CLOVER_APP_ID;
 const APP_SECRET = process.env.CLOVER_APP_SECRET;
 const REDIRECT_URI = process.env.REDIRECT_URI;
-const SITE_URL = process.env.SITE_URL;
-const NODE_ENV = process.env.NODE_ENV || "development";
 
-// Middleware
-app.use((req, res, next) => {
-  console.log(`${new Date().toISOString()} - ${req.method} ${req.url}`);
-  next();
-});
+console.log("=== MAX CLOVER APP ===");
+console.log("App ID:", APP_ID);
+console.log("App Secret:", APP_SECRET ? "✅ Set" : "❌ Missing");
+console.log("Redirect URI:", REDIRECT_URI);
+console.log("======================");
 
-// ========== API ENDPOINTS ==========
-
-// API Root
-app.get("/api", (req, res) => {
-  res.json({
-    service: "Max Clover API",
-    version: "1.0.0",
-    environment: NODE_ENV,
-    endpoints: {
-      root: "GET /api",
-      health: "GET /api/health",
-      auth: "GET /api/auth",
-      callback: "GET /api/callback",
-      exchange: "POST /api/exchange"
-    }
-  });
-});
-
-// Health Check
-app.get("/api/health", (req, res) => {
-  res.json({
-    status: "OK",
-    timestamp: new Date().toISOString(),
-    service: "Max Clover Server",
-    environment: NODE_ENV,
-    port: PORT
-  });
-});
-
-// Generate Auth URL
-app.get("/api/auth", (req, res) => {
-  if (!APP_ID || !REDIRECT_URI) {
-    return res.status(400).json({
-      error: "Missing configuration",
-      message: "CLOVER_APP_ID or REDIRECT_URI not set"
-    });
-  }
-  
-  const authUrl = `https://sandbox.dev.clover.com/oauth/authorize?client_id=${APP_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&response_type=code`;
-  
-  res.json({
-    message: "Redirect to Clover OAuth",
-    auth_url: authUrl,
-    redirect: true
-  });
-});
-
-// OAuth Callback
-app.get("/api/callback", async (req, res) => {
-  const { code, error } = req.query;
-  
-  if (error) {
-    return res.status(400).json({
-      error: "Authorization Failed",
-      details: error,
-      timestamp: new Date().toISOString()
-    });
-  }
-  
-  if (!code) {
-    return res.status(400).json({
-      error: "Missing Authorization Code",
-      message: "No code parameter found"
-    });
-  }
-  
-  console.log(`Received authorization code: ${code.substring(0, 20)}...`);
-  
-  try {
-    const response = await axios.post(
-      "https://apisandbox.dev.clover.com/oauth/v2/token",
-      new URLSearchParams({
-        client_id: APP_ID,
-        client_secret: APP_SECRET,
-        code: code,
-        redirect_uri: REDIRECT_URI
-      }),
-      {
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded"
-        }
-      }
-    );
-    
-    const { access_token, merchant_id, expires_in } = response.data;
-    
-    console.log(`Token exchange successful for merchant: ${merchant_id}`);
-    
-    res.json({
-      success: true,
-      message: "Clover OAuth Successful",
-      merchant_id: merchant_id,
-      access_token: access_token ? `${access_token.substring(0, 20)}...` : null,
-      token_type: "bearer",
-      expires_in: expires_in,
-      expires_in_hours: Math.floor(expires_in / 3600),
-      timestamp: new Date().toISOString()
-    });
-    
-  } catch (err) {
-    console.error("Token exchange failed:", err.response?.data || err.message);
-    
-    res.status(500).json({
-      success: false,
-      error: "Token Exchange Failed",
-      details: err.response?.data || err.message,
-      timestamp: new Date().toISOString()
-    });
-  }
-});
-
-// Token Exchange Endpoint
-app.post("/api/exchange", async (req, res) => {
-  try {
-    const { code } = req.body;
-    
-    if (!code) {
-      return res.status(400).json({
-        success: false,
-        error: "Missing authorization code"
-      });
-    }
-    
-    console.log("Exchanging code:", code.substring(0, 20) + "...");
-    
-    const response = await axios.post(
-      "https://apisandbox.dev.clover.com/oauth/v2/token",
-      new URLSearchParams({
-        client_id: APP_ID,
-        client_secret: APP_SECRET,
-        code: code,
-        redirect_uri: REDIRECT_URI
-      }),
-      {
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded"
-        }
-      }
-    );
-    
-    console.log("Token received");
-    res.json({ success: true, ...response.data });
-    
-  } catch (error) {
-    console.error("Exchange failed:", error.response?.data || error.message);
-    res.status(500).json({
-      success: false,
-      error: "Exchange failed",
-      details: error.response?.data || error.message
-    });
-  }
-});
-
-// ========== HTML DASHBOARD ==========
-
-// Root HTML page
 app.get("/", (req, res) => {
-  const { code } = req.query;
+  const { code, merchant_id } = req.query;
   
   let html = `
-  <!DOCTYPE html>
   <html>
-  <head>
-    <title>Max Clover App</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <style>
-      body { font-family: Arial, sans-serif; padding: 20px; max-width: 800px; margin: 0 auto; }
-      .box { background: #f0f0f0; padding: 20px; margin: 20px 0; border-radius: 10px; }
-      .btn { background: blue; color: white; padding: 10px 20px; border: none; cursor: pointer; margin: 5px; }
-      .success { background: #d4edda; border-left: 4px solid #28a745; }
-      .error { background: #f8d7da; border-left: 4px solid #dc3545; }
-    </style>
+  <head><title>Max Clover App</title>
+  <style>
+    body { font-family: Arial; padding: 20px; }
+    .box { background: #f0f0f0; padding: 20px; margin: 20px 0; border-radius: 10px; }
+    .btn { background: blue; color: white; padding: 10px 20px; border: none; cursor: pointer; }
+  </style>
   </head>
   <body>
     <h1>Max Clover App</h1>
     <div class="box">
-      <h3>Server Status</h3>
-      <p><strong>Environment:</strong> ${NODE_ENV}</p>
       <p><strong>App ID:</strong> ${APP_ID || "Not set"}</p>
-      <p><strong>App Secret:</strong> ${APP_SECRET ? "Set" : "Missing"}</p>
-      <p><strong>Redirect URI:</strong> ${REDIRECT_URI || "Not set"}</p>
+      <p><strong>App Secret:</strong> ${APP_SECRET ? "✅ Set" : "❌ Missing"}</p>
   `;
   
   if (code) {
     html += `
-      <div class="box success">
-        <h3>Authorization Code Received!</h3>
-        <p>Code: ${code.substring(0, 30)}...</p>
-        <button class="btn" onclick="exchangeToken()">Get Access Token</button>
-        <div id="result"></div>
-        <script>
-          async function exchangeToken() {
-            const res = await fetch("/api/exchange", {
-              method: "POST",
-              headers: {"Content-Type": "application/json"},
-              body: JSON.stringify({code: "${code}"})
-            });
-            const data = await res.json();
-            document.getElementById("result").innerHTML = 
-              data.success ? 
-                "<p>Success! Token: " + (data.access_token || "").substring(0, 30) + "...</p>" : 
-                "<p>Error: " + data.error + "</p>";
-          }
-        </script>
-      </div>
+      <h3>✅ Code Received!</h3>
+      <p>Code: ${code}</p>
+      ${merchant_id ? `<p>Merchant ID: ${merchant_id}</p>` : ''}
+      <button class="btn" onclick="exchangeToken()">Get Access Token</button>
+      <div id="result"></div>
+      <script>
+        async function exchangeToken() {
+          const res = await fetch("/exchange", {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({code: "${code}"})
+          });
+          const data = await res.json();
+          document.getElementById("result").innerHTML = 
+            data.success ? "<p>✅ Token: " + data.access_token.substring(0, 30) + "...</p>" : 
+                          "<p>❌ Error: " + data.error + "</p>";
+        }
+      </script>
     `;
   } else {
     html += `
-      <div class="box">
-        <h3>Start OAuth Flow</h3>
-        <a href="/api/auth" class="btn">Get Authorization URL</a>
-        <a href="/api" class="btn">View API</a>
-      </div>
-      
-      <div class="box">
-        <h3>Setup Instructions</h3>
-        <ol>
-          <li>Click "Get Authorization URL"</li>
-          <li>Authorize in Clover Sandbox</li>
-          <li>Exchange code for access token</li>
-        </ol>
-      </div>
+      <h3>📝 Setup Instructions:</h3>
+      <ol>
+        <li>Configure Clover Dashboard with callback URL</li>
+        <li>Start OAuth flow from Clover App Market</li>
+        <li>Exchange code for access token</li>
+      </ol>
     `;
   }
   
-  html += `
-    </div>
-  </body>
-  </html>
-  `;
-  
+  html += "</div></body></html>";
   res.send(html);
 });
 
-// 404 Handler
-app.use((req, res) => {
-  res.status(404).send(`
-    <html><body style="font-family: Arial; padding: 40px;">
-      <h1>404 - Not Found</h1>
-      <p>The requested URL ${req.url} was not found.</p>
-      <a href="/">Go to Home</a>
-    </body></html>
-  `);
+// OAuth Callback Route
+app.get("/callback", (req, res) => {
+  const { code, merchant_id, employee_id, client_id, error } = req.query;
+  
+  console.log("📨 OAuth Callback Received:");
+  console.log("  Code:", code);
+  console.log("  Merchant ID:", merchant_id);
+  console.log("  Employee ID:", employee_id);
+  console.log("  Client ID:", client_id);
+  
+  if (error) {
+    console.error("❌ OAuth Error:", error);
+    return res.redirect(`/?error=${encodeURIComponent(error)}`);
+  }
+  
+  if (code) {
+    console.log("✅ Authorization successful, redirecting with code");
+    return res.redirect(`/?code=${code}&merchant_id=${merchant_id}`);
+  }
+  
+  res.redirect("/");
 });
 
-// Start Server
-app.listen(PORT, "0.0.0.0", () => {
-  console.log("=== MAX CLOVER APP ===");
-  console.log("App ID:", APP_ID);
-  console.log("App Secret:", APP_SECRET ? "Set" : "Missing");
-  console.log("Redirect URI:", REDIRECT_URI);
-  console.log("Environment:", NODE_ENV);
-  console.log("======================");
-  console.log(`Server running on port ${PORT}`);
-  
-  if (NODE_ENV === "production") {
-    console.log(`Production: https://myserver-wk8h.onrender.com`);
+app.post("/exchange", async (req, res) => {
+  try {
+    const { code } = req.body;
+    console.log("Exchanging code:", code?.substring(0, 20) + "...");
+    
+    const response = await axios.post("https://apisandbox.dev.clover.com/oauth/v2/token", {
+      client_id: APP_ID,
+      client_secret: APP_SECRET,
+      code: code,
+      redirect_uri: REDIRECT_URI
+    });
+    
+    console.log("✅ Token received");
+    res.json({ success: true, ...response.data });
+    
+  } catch (error) {
+    console.error("❌ Exchange failed:", error.response?.data || error.message);
+    res.json({ 
+      success: false, 
+      error: "Exchange failed", 
+      details: error.response?.data?.message 
+    });
   }
+});
+
+app.listen(PORT, "0.0.0.0", () => {
+  console.log("🚀 Server: http://localhost:" + PORT);
 });
