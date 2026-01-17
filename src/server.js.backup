@@ -1,0 +1,56 @@
+﻿require("dotenv").config();
+const express = require("express");
+const path = require("path");
+
+const app = express();
+const PORT = process.env.PORT || 3000;
+
+// Serve static files from public folder
+app.use(express.static("public"));
+
+// Middleware to parse JSON
+app.use(express.json());
+
+// Import routes
+const authRoutes = require("./routes/auth");
+const apiRoutes = require("./routes/api");
+const cloverDashboard = require("./routes/cloverDashboard"); // NEW
+
+// Use routes
+app.use("/auth", authRoutes);
+app.use("/api", apiRoutes);
+app.use("/clover", cloverDashboard); // All clover dashboards under /clover
+
+// Serve your donation HTML directly
+app.get("/donations", (req, res) => {
+  res.sendFile(path.join(__dirname, "../omar-mosque-donation.html"));
+});
+
+// Redirect root to clover dashboard hub
+app.get("/", (req, res) => {
+  res.redirect("/clover");
+});
+
+// FIX: Redirect /callback to /auth/callback for OAuth
+app.get("/callback", (req, res) => {
+  console.log("🔄 Redirecting Clover OAuth callback");
+  res.redirect("/auth/callback?merchant_id=" + (req.query.merchant_id || '') + "&code=" + (req.query.code || ''));
+});
+
+// Error handling middleware
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).send('Something broke!');
+});
+
+// Start server
+app.listen(PORT, () => {
+  console.log(\🚀 Server running on port \\);
+  console.log(\📊 Available dashboards:\);
+  console.log(\   http://localhost:\/clover           - Dashboard Hub\);
+  console.log(\   http://localhost:\/clover/sales     - Sales Dashboard\);
+  console.log(\   http://localhost:\/clover/analytics - Analytics Dashboard\);
+  console.log(\   http://localhost:\/clover/simple    - Simple Dashboard\);
+  console.log(\   http://localhost:\/donations        - Donations Dashboard\);
+  console.log(\\n🔑 For OAuth: Launch from Clover Sandbox → Apps → Your App\);
+});

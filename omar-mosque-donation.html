@@ -1,0 +1,391 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Omar Mosque | Sadaqah & Zakat Platform</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* All the CSS styles from the previous code */
+        :root {
+            --primary: #0d9488;
+            --primary-dark: #0f766e;
+            --secondary: #d97706;
+            --light: #f0fdfa;
+            --dark: #134e4a;
+            --success: #059669;
+            --text: #1f2937;
+            --border: #e5e7eb;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f0fdfa 0%, #ccfbf1 100%);
+            color: var(--text);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        /* All other CSS styles... */
+        /* [Paste the ENTIRE CSS section from the previous code here] */
+        
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header>
+            <div class="logo-container">
+                <div class="mosque-icon">
+                    <i class="fas fa-mosque"></i>
+                </div>
+                <div class="logo-text">
+                    <h1>Omar Mosque</h1>
+                    <p>Sadaqah • Zakat • Continuous Charity</p>
+                </div>
+            </div>
+            <div class="auth-status" id="authStatus">
+                <i class="fas fa-shield-check"></i>
+                <span>Secure Payment Processing Active</span>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <div class="donation-grid">
+            <!-- Donation Form -->
+            <div class="donation-form">
+                <h2 class="form-title">
+                    <i class="fas fa-hands-helping"></i>
+                    Make a Difference Today
+                </h2>
+                
+                <!-- Donation Type -->
+                <div class="donation-type">
+                    <div class="type-btn selected" data-type="sadaqah">
+                        Sadaqah
+                    </div>
+                    <div class="type-btn" data-type="zakat">
+                        Zakat
+                    </div>
+                    <div class="type-btn" data-type="general">
+                        General Fund
+                    </div>
+                </div>
+                
+                <!-- Amount Selection -->
+                <div class="amount-options">
+                    <div class="amount-option" data-amount="25">$25</div>
+                    <div class="amount-option" data-amount="50">$50</div>
+                    <div class="amount-option selected" data-amount="100">$100</div>
+                    <div class="amount-option" data-amount="250">$250</div>
+                    <div class="amount-option" data-amount="500">$500</div>
+                    <div class="amount-option" data-amount="1000">$1,000</div>
+                </div>
+                
+                <!-- Custom Amount -->
+                <div class="custom-amount">
+                    <label>Or enter a custom amount:</label>
+                    <div class="input-group">
+                        <span>$</span>
+                        <input type="number" id="customAmount" placeholder="0.00" min="1" step="0.01">
+                    </div>
+                </div>
+                
+                <!-- Fee Options -->
+                <div class="fee-options">
+                    <div class="fee-title">
+                        <i class="fas fa-hand-holding-usd"></i>
+                        Processing Fee Contribution
+                    </div>
+                    
+                    <p style="color: #666; margin-bottom: 15px; font-size: 0.95em;">
+                        Help Omar Mosque receive 100% of your donation by optionally covering the payment processing fee.
+                    </p>
+                    
+                    <div class="fee-option selected" data-fee="cover">
+                        <div class="left">
+                            <div class="radio-circle"></div>
+                            <div>
+                                <div class="fee-label">Yes, I'll cover the fee</div>
+                                <div class="fee-note">Omar Mosque receives 100% of my donation</div>
+                            </div>
+                        </div>
+                        <div class="fee-amount" id="feeCoverAmount">+$3.30</div>
+                    </div>
+                    
+                    <div class="fee-option" data-fee="deduct">
+                        <div class="left">
+                            <div class="radio-circle"></div>
+                            <div>
+                                <div class="fee-label">No, deduct from my donation</div>
+                                <div class="fee-note">Standard 2.9% + $0.30 fee applied</div>
+                            </div>
+                        </div>
+                        <div class="fee-amount" id="feeDeductAmount">-$3.30</div>
+                    </div>
+                </div>
+                
+                <!-- Payment Info -->
+                <div style="margin-top: 30px; padding-top: 25px; border-top: 1px solid var(--border);">
+                    <div class="fee-title">
+                        <i class="fas fa-credit-card"></i>
+                        Secure Payment
+                    </div>
+                    <p style="color: #666; font-size: 0.95em; margin-top: 10px;">
+                        Your payment is processed securely via our merchant partner. 
+                        <a href="#" id="connectAccount" style="color: var(--primary); text-decoration: none; font-weight: 600;">
+                            Connect your account for faster checkout
+                        </a>
+                    </p>
+                </div>
+            </div>
+            
+            <!-- Summary Box -->
+            <div class="summary-box">
+                <h2 class="summary-title">
+                    <i class="fas fa-receipt"></i>
+                    Donation Summary
+                </h2>
+                
+                <div class="summary-details">
+                    <div class="summary-row">
+                        <span>Donation Amount</span>
+                        <span id="donationAmount">$100.00</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>Donation Type</span>
+                        <span id="donationType">Sadaqah</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>Processing Fee</span>
+                        <span id="processingFee">$3.30</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>Fee Contribution</span>
+                        <span id="feeContribution" style="color: var(--success);">You're covering it</span>
+                    </div>
+                    <div class="summary-row total">
+                        <span>Total Amount</span>
+                        <span id="totalAmount">$103.30</span>
+                    </div>
+                </div>
+                
+                <button class="btn-donate" id="donateButton">
+                    <i class="fas fa-lock"></i>
+                    Complete Secure Donation
+                </button>
+                
+                <div style="text-align: center; margin-top: 20px; color: #666; font-size: 0.85em;">
+                    <i class="fas fa-lock"></i> 256-bit SSL Encryption • PCI Compliant
+                </div>
+            </div>
+        </div>
+        
+        <!-- Progress Section -->
+        <div class="progress-section">
+            <h2 class="progress-title">Ramadan Fundraiser Progress</h2>
+            <div class="progress-bar">
+                <div class="progress-fill"></div>
+            </div>
+            <div class="progress-info">
+                <span>$24,580 raised</span>
+                <span>Goal: $38,000</span>
+                                <span>65% Complete</span>
+            </div>
+        </div>
+        
+        <!-- Footer -->
+        <footer>
+            <p>Omar Mosque is a 501(c)(3) organization. All donations are tax-deductible.</p>
+            <p>EIN: 12-3456789 | 123 Faith Street, Anytown, USA</p>
+            <div class="security-badges">
+                <i class="fas fa-shield-alt"></i>
+                <i class="fas fa-lock"></i>
+                <i class="fas fa-user-shield"></i>
+            </div>
+        </footer>
+    </div>
+    
+    <!-- Processing Modal -->
+    <div class="modal" id="processingModal">
+        <div class="modal-content">
+            <div class="loading" id="loadingState">
+                <div class="spinner"></div>
+                <h3 class="modal-title">Processing Your Donation</h3>
+                <p>Connecting to secure payment gateway...</p>
+            </div>
+            <div class="success" id="successState" style="display: none;">
+                <div class="modal-icon">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <h3 class="modal-title">Thank You for Your Generosity!</h3>
+                <p style="text-align: center; margin: 20px 0; line-height: 1.6;">
+                    Your donation of <strong id="finalAmount">$103.30</strong> has been successfully processed.<br>
+                    A receipt has been sent to your email.
+                </p>
+                <button class="btn-donate" onclick="closeModal()" style="margin-top: 20px;">
+                    <i class="fas fa-check"></i>
+                    Done
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initial state
+        let donationAmount = 100;
+        let donationType = 'sadaqah';
+        let feeOption = 'cover';
+        const processingRate = 0.029;
+        const flatFee = 0.30;
+        
+        // DOM Elements
+        const amountOptions = document.querySelectorAll('.amount-option');
+        const customAmountInput = document.getElementById('customAmount');
+        const feeOptions = document.querySelectorAll('.fee-option');
+        const typeButtons = document.querySelectorAll('.type-btn');
+        const donateButton = document.getElementById('donateButton');
+        const processingModal = document.getElementById('processingModal');
+        const loadingState = document.getElementById('loadingState');
+        const successState = document.getElementById('successState');
+        const connectAccountBtn = document.getElementById('connectAccount');
+        
+        // Update display elements
+        function updateDisplay() {
+            const processingFee = (donationAmount * processingRate + flatFee).toFixed(2);
+            const totalAmount = feeOption === 'cover' 
+                ? (parseFloat(donationAmount) + parseFloat(processingFee)).toFixed(2)
+                : donationAmount.toFixed(2);
+            
+            // Update summary
+            document.getElementById('donationAmount').textContent = `$${donationAmount.toFixed(2)}`;
+            document.getElementById('donationType').textContent = 
+                donationType === 'sadaqah' ? 'Sadaqah' : 
+                donationType === 'zakat' ? 'Zakat' : 'General Fund';
+            document.getElementById('processingFee').textContent = `$${processingFee}`;
+            document.getElementById('feeContribution').textContent = 
+                feeOption === 'cover' ? 'You\'re covering it' : 'Deducted from donation';
+            document.getElementById('totalAmount').textContent = `$${totalAmount}`;
+            
+            // Update fee option amounts
+            document.getElementById('feeCoverAmount').textContent = `+$${processingFee}`;
+            document.getElementById('feeDeductAmount').textContent = `-$${processingFee}`;
+            
+            // Update button text
+            donateButton.innerHTML = `<i class="fas fa-lock"></i> Donate $${totalAmount}`;
+            
+            // Store final amount for success modal
+            document.getElementById('finalAmount').textContent = `$${totalAmount}`;
+        }
+        
+        // Handle amount selection
+        amountOptions.forEach(option => {
+            option.addEventListener('click', function() {
+                amountOptions.forEach(opt => opt.classList.remove('selected'));
+                this.classList.add('selected');
+                donationAmount = parseFloat(this.dataset.amount);
+                customAmountInput.value = '';
+                updateDisplay();
+            });
+        });
+        
+        // Handle custom amount input
+        customAmountInput.addEventListener('input', function() {
+            amountOptions.forEach(opt => opt.classList.remove('selected'));
+            const value = parseFloat(this.value);
+            if (!isNaN(value) && value >= 1) {
+                donationAmount = value;
+                updateDisplay();
+            }
+        });
+        
+        // Handle fee option selection
+        feeOptions.forEach(option => {
+            option.addEventListener('click', function() {
+                feeOptions.forEach(opt => opt.classList.remove('selected'));
+                this.classList.add('selected');
+                feeOption = this.dataset.fee;
+                updateDisplay();
+            });
+        });
+        
+        // Handle donation type selection
+        typeButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                typeButtons.forEach(btn => btn.classList.remove('selected'));
+                this.classList.add('selected');
+                donationType = this.dataset.type;
+                updateDisplay();
+            });
+        });
+        
+        // Handle donation button click
+        donateButton.addEventListener('click', function() {
+            processingModal.style.display = 'flex';
+            loadingState.style.display = 'block';
+            successState.style.display = 'none';
+            
+            // Simulate API call
+            setTimeout(() => {
+                simulatePaymentProcessing();
+            }, 1500);
+        });
+        
+        // Simulate payment processing
+        function simulatePaymentProcessing() {
+            console.log('🔗 Connecting to payment gateway...');
+            
+            setTimeout(() => {
+                console.log('✅ Merchant authenticated: Q82R0D2NSRR81');
+                console.log('🔑 Token exchange successful');
+                
+                setTimeout(() => {
+                    loadingState.style.display = 'none';
+                    successState.style.display = 'block';
+                    
+                    console.log(`💰 Donation processed: $${donationAmount.toFixed(2)}`);
+                    console.log(`📊 Fee option: ${feeOption === 'cover' ? 'Covered by donor' : 'Deducted'}`);
+                }, 1000);
+            }, 2000);
+        }
+        
+        // Connect account button
+        connectAccountBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            alert('This would redirect to your OAuth endpoint: /auth/url\nThen callback to: /callback?merchant_id=Q82R0D2NSRR81&code=...');
+        });
+        
+        // Close modal
+        function closeModal() {
+            processingModal.style.display = 'none';
+            
+            setTimeout(() => {
+                amountOptions[2].click();
+                feeOptions[0].click();
+                typeButtons[0].click();
+                customAmountInput.value = '';
+            }, 500);
+        }
+        
+        // Initialize
+        updateDisplay();
+        
+        // Simulate auth status check
+        setTimeout(() => {
+            document.getElementById('authStatus').innerHTML = 
+                '<i class="fas fa-user-check"></i><span>Connected as Merchant: Q82R0D2NSRR81</span>';
+        }, 2000);
+    </script>
+</body>
+</html>
