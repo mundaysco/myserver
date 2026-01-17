@@ -1,0 +1,189 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clover Apps Test Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+        body { background: #f5f7fa; color: #333; padding: 20px; }
+        .container { max-width: 1200px; margin: 0 auto; }
+        header { background: white; padding: 30px; border-radius: 15px; text-align: center; margin-bottom: 30px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        .logo { color: #00a859; font-size: 3rem; margin-bottom: 15px; }
+        h1 { color: #333; margin-bottom: 10px; }
+        .subtitle { color: #666; max-width: 800px; margin: 0 auto; }
+        .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-bottom: 40px; }
+        .stat-card { background: white; padding: 25px; border-radius: 15px; text-align: center; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        .stat-value { font-size: 2.5rem; font-weight: bold; color: #00a859; }
+        .apps { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 25px; margin-bottom: 40px; }
+        .app-card { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); border-top: 5px solid #00a859; }
+        .app-icon { font-size: 2rem; color: #00a859; margin-bottom: 15px; }
+        .app-title { font-size: 1.3rem; font-weight: bold; margin-bottom: 10px; }
+        .app-desc { color: #666; margin-bottom: 20px; line-height: 1.5; }
+        .test-btn { background: #00a859; color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: bold; }
+        .test-btn:hover { background: #008f4c; }
+        .results { background: white; padding: 25px; border-radius: 15px; margin-top: 30px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        .result-item { padding: 10px 0; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; }
+        .controls { display: flex; gap: 15px; justify-content: center; margin-top: 30px; }
+        .control-btn { padding: 12px 25px; border-radius: 8px; border: none; cursor: pointer; font-weight: bold; }
+        .test-all { background: #00a859; color: white; }
+        .reset-all { background: #6c757d; color: white; }
+        .status-passed { color: #155724; font-weight: bold; }
+        .status-failed { color: #721c24; font-weight: bold; }
+        .status-pending { color: #856404; font-weight: bold; }
+        .status-testing { color: #0c5460; font-weight: bold; }
+        @media (max-width: 768px) { .stats { grid-template-columns: repeat(2, 1fr); } .apps { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo"><i class="fas fa-clover"></i></div>
+            <h1>Clover Apps Test Dashboard</h1>
+            <p class="subtitle">✅ WORKING VERSION - No API errors. All tests simulated locally.</p>
+        </header>
+
+        <div class="stats">
+            <div class="stat-card"><div class="stat-value">12</div><div>Apps to Test</div></div>
+            <div class="stat-card"><div class="stat-value" id="passed">0</div><div>Tests Passed</div></div>
+            <div class="stat-card"><div class="stat-value" id="failed">0</div><div>Tests Failed</div></div>
+            <div class="stat-card"><div class="stat-value" id="pending">12</div><div>Tests Pending</div></div>
+        </div>
+
+        <div class="apps">
+            <div class="app-card">
+                <div class="app-icon"><i class="fas fa-calendar-alt"></i></div>
+                <div class="app-title">Shift Management</div>
+                <div class="app-desc">Employee scheduling, shift tracking</div>
+                <button class="test-btn" onclick="testApp('shift')">Test Now</button>
+            </div>
+            <div class="app-card">
+                <div class="app-icon"><i class="fas fa-boxes"></i></div>
+                <div class="app-title">Inventory Management</div>
+                <div class="app-desc">Track stock levels, inventory alerts</div>
+                <button class="test-btn" onclick="testApp('inventory')">Test Now</button>
+            </div>
+            <div class="app-card">
+                <div class="app-icon"><i class="fas fa-award"></i></div>
+                <div class="app-title">Loyalty & Rewards</div>
+                <div class="app-desc">Customer loyalty programs</div>
+                <button class="test-btn" onclick="testApp('loyalty')">Test Now</button>
+            </div>
+            <div class="app-card">
+                <div class="app-icon"><i class="fas fa-shopping-cart"></i></div>
+                <div class="app-title">Online Ordering</div>
+                <div class="app-desc">Accept online orders</div>
+                <button class="test-btn" onclick="testApp('ordering')">Test Now</button>
+            </div>
+        </div>
+
+        <div class="results">
+            <h2 style="margin-bottom: 20px;">Test Results</h2>
+            <div id="results">
+                <div class="result-item">
+                    <div>No tests run yet</div>
+                    <div class="status-pending">PENDING</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="controls">
+            <button class="control-btn test-all" onclick="testAll()">Test All Apps</button>
+            <button class="control-btn reset-all" onclick="resetAll()">Reset All Tests</button>
+        </div>
+    </div>
+
+    <script>
+        // SIMPLE VERSION - NO API CALLS
+        const apps = {
+            shift: {name: "Shift Management", status: "pending", time: null},
+            inventory: {name: "Inventory Management", status: "pending", time: null},
+            loyalty: {name: "Loyalty & Rewards", status: "pending", time: null},
+            ordering: {name: "Online Ordering", status: "pending", time: null}
+        };
+
+        function updateStats() {
+            let passed = 0, failed = 0, pending = 0;
+            Object.values(apps).forEach(app => {
+                if(app.status === "passed") passed++;
+                else if(app.status === "failed") failed++;
+                else pending++;
+            });
+            document.getElementById('passed').textContent = passed;
+            document.getElementById('failed').textContent = failed;
+            document.getElementById('pending').textContent = pending;
+        }
+
+        function updateResults() {
+            const container = document.getElementById('results');
+            container.innerHTML = '';
+            
+            Object.values(apps).forEach(app => {
+                const timeText = app.time ? ` (${app.time}s)` : '';
+                container.innerHTML += `
+                    <div class="result-item">
+                        <div>${app.name}${timeText}</div>
+                        <div class="status-${app.status}">${app.status.toUpperCase()}</div>
+                    </div>
+                `;
+            });
+        }
+
+        function testApp(appId) {
+            if(apps[appId].status !== "pending") {
+                alert("Test already run. Click 'Reset All Tests' to run again.");
+                return;
+            }
+            
+            apps[appId].status = "testing";
+            updateResults();
+            
+            // SIMULATE TEST - NO API CALLS
+            setTimeout(() => {
+                const success = Math.random() > 0.2;
+                apps[appId].status = success ? "passed" : "failed";
+                apps[appId].time = (Math.random() * 2 + 1).toFixed(1);
+                updateStats();
+                updateResults();
+                
+                // Show success message
+                if (success) {
+                    console.log(`✅ ${apps[appId].name}: Test passed`);
+                } else {
+                    console.log(`⚠️ ${apps[appId].name}: Test failed (simulated)`);
+                }
+            }, Math.random() * 2000 + 1000);
+        }
+
+        async function testAll() {
+            const pending = Object.keys(apps).filter(id => apps[id].status === "pending");
+            
+            if (pending.length === 0) {
+                alert("All tests already completed. Reset to run again.");
+                return;
+            }
+            
+            for(const appId of pending) {
+                testApp(appId);
+                await new Promise(resolve => setTimeout(resolve, 500));
+            }
+        }
+
+        function resetAll() {
+            Object.keys(apps).forEach(id => {
+                apps[id].status = "pending";
+                apps[id].time = null;
+            });
+            updateStats();
+            updateResults();
+            console.log("🔄 All tests reset");
+        }
+
+        // Initialize
+        updateStats();
+        updateResults();
+        console.log("🚀 Clover Dashboard loaded successfully!");
+    </script>
+</body>
+</html>

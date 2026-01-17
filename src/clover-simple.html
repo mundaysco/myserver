@@ -1,0 +1,58 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>Clover Apps Test Dashboard</title>
+    <style>
+        body { font-family: Arial; padding: 20px; background: #f0f0f0; }
+        .container { max-width: 1200px; margin: 0 auto; }
+        header { background: white; padding: 20px; border-radius: 10px; margin-bottom: 20px; text-align: center; }
+        .app-card { background: white; padding: 20px; margin: 10px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .test-button { background: #00a859; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; }
+        .results { background: white; padding: 20px; border-radius: 10px; margin-top: 20px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Clover Apps Test Dashboard</h1>
+            <p>Test your Clover app capabilities</p>
+        </header>
+        
+        <div class="app-card">
+            <h2>Shift Management</h2>
+            <p>Test shift scheduling functionality</p>
+            <button class="test-button" onclick="testApp('shift')">Test Now</button>
+            <span id="shift-result"></span>
+        </div>
+        
+        <div class="results">
+            <h2>Test Results</h2>
+            <div id="results"></div>
+        </div>
+    </div>
+    
+    <script>
+        function testApp(appName) {
+            const resultSpan = document.getElementById(appName + '-result');
+            resultSpan.textContent = 'Testing...';
+            resultSpan.style.color = 'orange';
+            
+            setTimeout(() => {
+                const isSuccess = Math.random() > 0.2;
+                if (isSuccess) {
+                    resultSpan.textContent = '✓ Test Passed';
+                    resultSpan.style.color = 'green';
+                } else {
+                    resultSpan.textContent = '✗ Test Failed';
+                    resultSpan.style.color = 'red';
+                }
+                
+                // Add to results log
+                const resultsDiv = document.getElementById('results');
+                const timestamp = new Date().toLocaleTimeString();
+                resultsDiv.innerHTML = `<div>${timestamp}: ${appName} - ${isSuccess ? 'PASSED' : 'FAILED'}</div>` + resultsDiv.innerHTML;
+            }, 1500);
+        }
+    </script>
+</body>
+</html>

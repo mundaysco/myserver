@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clover Shift Manager</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #00b09b 0%, #96c93d 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            color: #666;
+            font-size: 1.1em;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        }
+        
+        .stat-number {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #00b09b;
+            margin: 10px 0;
+        }
+        
+        .stat-label {
+            color: #666;
+            font-size: 0.9em;
+        }
+        
+        .section {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+        }
+        
+        .section h2 {
+            color: #333;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .employee-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .employee-card {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            border-left: 5px solid #00b09b;
+            transition: transform 0.3s;
+        }
+        
+        .employee-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .employee-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .employee-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: #00b09b;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+        
+        .employee-name {
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+        
+        .employee-role {
+            color: #666;
+            font-size: 0.9em;
+        }
+        
+        .status-badge {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: 600;
+        }
+        
+        .status-clocked-in {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .status-clocked-out {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, #00b09b 0%, #96c93d 100%);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            margin: 5px;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 176, 155, 0.4);
+        }
+        
+        .btn-secondary {
+            background: #f8f9fa;
+            color: #333;
+            border: 2px solid #00b09b;
+        }
+        
+        .shift-schedule {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .shift-card {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 4px solid #96c93d;
+        }
+        
+        .shift-time {
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .shift-employee {
+            color: #666;
+            margin-top: 5px;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+        
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+        
+        .success {
+            background: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>👥 Clover Shift Manager</h1>
+            <p>Employee scheduling and shift tracking made simple</p>
+        </div>
+        
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-label">Total Employees</div>
+                <div class="stat-number" id="totalEmployees">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Clocked In</div>
+                <div class="stat-number" id="clockedIn">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Today's Shifts</div>
+                <div class="stat-number" id="totalShifts">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Active Now</div>
+                <div class="stat-number" id="activeNow">0</div>
+            </div>
+        </div>
+        
+        <div class="section">
+            <h2>📊 Quick Stats</h2>
+            <div>
+                <button class="btn" onclick="loadAllData()">
+                    <span>🔄 Refresh All Data</span>
+                </button>
+                <button class="btn-secondary" onclick="testConnection()">
+                    <span>🔗 Test Connection</span>
+                </button>
+            </div>
+            <div id="statusMessage" style="display: none; margin-top: 20px;"></div>
+        </div>
+        
+        <div class="section">
+            <h2>👥 Employees</h2>
+            <div id="employeesLoading" class="loading">
+                ⏳ Loading employee data...
+            </div>
+            <div id="employeesError" class="error" style="display: none;"></div>
+            <div id="employeesGrid" class="employee-grid" style="display: none;">
+                <!-- Employee cards will go here -->
+            </div>
+        </div>
+        
+        <div class="section">
+            <h2>⏰ Today's Shifts</h2>
+            <div id="shiftsLoading" class="loading">
+                ⏳ Loading shift data...
+            </div>
+            <div id="shiftsError" class="error" style="display: none;"></div>
+            <div id="shiftsContainer" class="shift-schedule" style="display: none;">
+                <!-- Shift cards will go here -->
+            </div>
+        </div>
+        
+        <div class="section">
+            <h2>⚙️ Actions</h2>
+            <div>
+                <button class="btn" onclick="simulateClockIn()">
+                    <span>🕐 Simulate Clock In</span>
+                </button>
+                <button class="btn-secondary" onclick="viewRawData()">
+                    <span>📋 View Raw Data</span>
+                </button>
+                <button class="btn-secondary" onclick="openDashboard()">
+                    <span>📊 Open Full Dashboard</span>
+                </button>
+            </div>
+            <div id="actionResult" style="margin-top: 20px;"></div>
+        </div>
+    </div>
+
+    <script>
+        // Configuration
+        const MERCHANT_ID = "Q82R0D2NSRR81";
+        
+        // Load data on page load
+        window.onload = function() {
+            loadAllData();
+        };
+        
+        function openDashboard() {
+            window.open('/dashboard.html', '_blank');
+        }
+        
+        async function testConnection() {
+            showStatus("Testing connection to Clover...", "info");
+            
+            try {
+                const response = await fetch('/auth/tokens');
+                const data = await response.json();
+                
+                if (data.success && data.count > 0) {
+                    showStatus(`✅ Connected to merchant: ${data.merchants[0]}`, "success");
+                } else {
+                    showStatus("❌ Not connected to any merchant", "error");
+                }
+            } catch (error) {
+                showStatus(`❌ Connection error: ${error.message}`, "error");
+            }
+        }
+        
+        async function loadAllData() {
+            showStatus("Loading all employee data...", "info");
+            
+            // Load employees
+            await loadEmployees();
+            
+            // Update stats
+            updateStats();
+            
+            showStatus("✅ Data loaded successfully!", "success");
+        }
+        
+        async function loadEmployees() {
+            const loadingEl = document.getElementById('employeesLoading');
+            const errorEl = document.getElementById('employeesError');
+            const gridEl = document.getElementById('employeesGrid');
+            
+            loadingEl.style.display = 'block';
+            errorEl.style.display = 'none';
+            gridEl.style.display = 'none';
+            
+            try {
+                const response = await fetch('/auth/real-merchant');
+                const data = await response.json();
+                
+                if (data.success) {
+                    // For now, simulate employee data
+                    // In real app, you would fetch from /auth/employees
+                    const simulatedEmployees = [
+                        { id: 1, name: "John Smith", role: "Manager", clockedIn: true, initials: "JS" },
+                        { id: 2, name: "Maria Garcia", role: "Server", clockedIn: true, initials: "MG" },
+                        { id: 3, name: "David Chen", role: "Chef", clockedIn: false, initials: "DC" },
+                        { id: 4, name: "Sarah Johnson", role: "Bartender", clockedIn: true, initials: "SJ" },
+                        { id: 5, name: "Mike Wilson", role: "Host", clockedIn: false, initials: "MW" }
+                    ];
+                    
+                    displayEmployees(simulatedEmployees);
+                    
+                    loadingEl.style.display = 'none';
+                    gridEl.style.display = 'grid';
+                } else {
+                    throw new Error(data.error || "Failed to load data");
+                }
+            } catch (error) {
+                loadingEl.style.display = 'none';
+                errorEl.textContent = `❌ Error: ${error.message}`;
+                errorEl.style.display = 'block';
+            }
+        }
+        
+        function displayEmployees(employees) {
+            const gridEl = document.getElementById('employeesGrid');
+            let html = '';
+            
+            employees.forEach(emp => {
+                html += `
+                    <div class="employee-card">
+                        <div class="employee-header">
+                            <div class="employee-avatar">${emp.initials}</div>
+                            <div>
+                                <div class="employee-name">${emp.name}</div>
+                                <div class="employee-role">${emp.role}</div>
+                            </div>
+                        </div>
+                        <div style="margin-top: 10px;">
+                            <span class="status-badge ${emp.clockedIn ? 'status-clocked-in' : 'status-clocked-out'}">
+                                ${emp.clockedIn ? '🟢 CLOCKED IN' : '🔴 CLOCKED OUT'}
+                            </span>
+                        </div>
+                        <div style="margin-top: 15px; font-size: 0.9em; color: #666;">
+                            ID: ${emp.id} | Last active: 2 hours ago
+                        </div>
+                    </div>
+                `;
+            });
+            
+            gridEl.innerHTML = html;
+            
+            // Update stats
+            const clockedInCount = employees.filter(e => e.clockedIn).length;
+            document.getElementById('totalEmployees').textContent = employees.length;
+            document.getElementById('clockedIn').textContent = clockedInCount;
+            document.getElementById('activeNow').textContent = clockedInCount;
+        }
+        
+        function updateStats() {
+            // In real app, calculate from actual data
+            document.getElementById('totalShifts').textContent = "8";
+        }
+        
+        function simulateClockIn() {
+            const resultEl = document.getElementById('actionResult');
+            resultEl.innerHTML = `
+                <div class="success">
+                    ✅ Simulated clock-in for employee "John Smith"<br>
+                    📅 Time: ${new Date().toLocaleTimeString()}<br>
+                    🆔 Transaction ID: CLK-${Date.now()}
+                </div>
+            `;
+            
+            // Update UI
+            setTimeout(() => {
+                loadAllData();
+            }, 1000);
+        }
+        
+        function viewRawData() {
+            // For demo, show some sample data
+            const sampleData = {
+                success: true,
+                data: {
+                    merchant: {
+                        name: "Demo Coffee Shop",
+                        id: MERCHANT_ID
+                    },
+                    employees: 5,
+                    active_shifts: 3,
+                    today_revenue: 1250.75
+                }
+            };
+            
+            const resultEl = document.getElementById('actionResult');
+            resultEl.innerHTML = `
+                <div style="background: #333; color: white; padding: 20px; border-radius: 10px; margin-top: 10px; font-family: monospace;">
+                    <h3 style="color: #96c93d;">📊 Sample Data Structure</h3>
+                    <pre style="overflow: auto; max-height: 300px;">${JSON.stringify(sampleData, null, 2)}</pre>
+                </div>
+            `;
+        }
+        
+        function showStatus(message, type) {
+            const statusEl = document.getElementById('statusMessage');
+            statusEl.innerHTML = `
+                <div class="${type === 'error' ? 'error' : 'success'}">
+                    ${message}
+                </div>
+            `;
+            statusEl.style.display = 'block';
+            
+            // Auto-hide after 5 seconds
+            setTimeout(() => {
+                statusEl.style.display = 'none';
+            }, 5000);
+        }
+    </script>
+</body>
+</html>
