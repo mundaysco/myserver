@@ -460,3 +460,6 @@ router.get("/real-merchant", async (req, res) => {
     });
   }
 });
+});
+
+module.exports = router;
