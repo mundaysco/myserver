@@ -1,0 +1,619 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Butter Dashboard - Analytics & Management</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary: #FF6B35;
+            --secondary: #FF9F1C;
+            --accent: #2EC4B6;
+            --dark: #0A0A0A;
+            --light: #FDFFFC;
+            --gray: #E5E5E5;
+            --shadow: 0 8px 30px rgba(0,0,0,0.12);
+        }
+
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        .header {
+            background: white;
+            border-radius: 20px;
+            padding: 25px 40px;
+            margin-bottom: 30px;
+            box-shadow: var(--shadow);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-left: 8px solid var(--primary);
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .title h1 {
+            color: var(--dark);
+            font-size: 28px;
+            font-weight: 700;
+        }
+
+        .title p {
+            color: #666;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 25px;
+        }
+
+        .nav-item {
+            padding: 10px 20px;
+            border-radius: 50px;
+            text-decoration: none;
+            color: var(--dark);
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-item:hover, .nav-item.active {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: var(--shadow);
+            transition: transform 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 6px;
+            height: 100%;
+            background: var(--primary);
+        }
+
+        .stat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .icon-revenue { background: rgba(255, 107, 53, 0.1); color: var(--primary); }
+        .icon-users { background: rgba(46, 196, 182, 0.1); color: var(--accent); }
+        .icon-orders { background: rgba(255, 159, 28, 0.1); color: var(--secondary); }
+        .icon-growth { background: rgba(106, 76, 147, 0.1); color: #6A4C93; }
+
+        .stat-value {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .stat-change {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 14px;
+            font-weight: 500;
+            margin-top: 10px;
+        }
+
+        .change-up { color: #2ECC71; }
+        .change-down { color: #E74C3C; }
+
+        /* Main Content */
+        .content-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .chart-container, .recent-activity, .quick-actions {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: var(--shadow);
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--gray);
+        }
+
+        .section-header h2 {
+            color: var(--dark);
+            font-size: 22px;
+            font-weight: 600;
+        }
+
+        /* Chart */
+        .chart-placeholder {
+            height: 300px;
+            background: linear-gradient(45deg, rgba(255, 107, 53, 0.05), rgba(46, 196, 182, 0.05));
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #999;
+            font-size: 18px;
+        }
+
+        /* Activity List */
+        .activity-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .activity-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px;
+            border-radius: 12px;
+            background: var(--light);
+            transition: background 0.3s ease;
+        }
+
+        .activity-item:hover {
+            background: var(--gray);
+        }
+
+        .activity-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .activity-details h4 {
+            color: var(--dark);
+            margin-bottom: 5px;
+            font-size: 16px;
+        }
+
+        .activity-details p {
+            color: #666;
+            font-size: 14px;
+        }
+
+        /* Quick Actions */
+        .actions-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        .action-btn {
+            background: var(--light);
+            border: 2px solid var(--gray);
+            border-radius: 12px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            color: var(--dark);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .action-btn:hover {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: white;
+            transform: translateY(-3px);
+        }
+
+        .action-icon {
+            font-size: 24px;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+            font-size: 14px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                gap: 20px;
+                text-align: center;
+            }
+            
+            .nav-menu {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="logo-container">
+                <div class="logo">
+                    🧈
+                </div>
+                <div class="title">
+                    <h1>Butter Dashboard</h1>
+                    <p>Analytics & Management Console</p>
+                </div>
+            </div>
+            <nav class="nav-menu">
+                <a href="#" class="nav-item active">
+                    <i class="fas fa-chart-line"></i> Overview
+                </a>
+                <a href="#" class="nav-item">
+                    <i class="fas fa-shopping-cart"></i> Orders
+                </a>
+                <a href="#" class="nav-item">
+                    <i class="fas fa-users"></i> Customers
+                </a>
+                <a href="#" class="nav-item">
+                    <i class="fas fa-cog"></i> Settings
+                </a>
+            </nav>
+        </header>
+
+        <!-- Stats Grid -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div>
+                        <div class="stat-value">$24,580</div>
+                        <div class="stat-label">Total Revenue</div>
+                    </div>
+                    <div class="stat-icon icon-revenue">
+                        <i class="fas fa-dollar-sign"></i>
+                    </div>
+                </div>
+                <div class="stat-change change-up">
+                    <i class="fas fa-arrow-up"></i> 12.5% from last month
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div>
+                        <div class="stat-value">1,842</div>
+                        <div class="stat-label">Active Users</div>
+                    </div>
+                    <div class="stat-icon icon-users">
+                        <i class="fas fa-user-friends"></i>
+                    </div>
+                </div>
+                <div class="stat-change change-up">
+                    <i class="fas fa-arrow-up"></i> 8.2% from last week
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div>
+                        <div class="stat-value">324</div>
+                        <div class="stat-label">New Orders</div>
+                    </div>
+                    <div class="stat-icon icon-orders">
+                        <i class="fas fa-shopping-bag"></i>
+                    </div>
+                </div>
+                <div class="stat-change change-up">
+                    <i class="fas fa-arrow-up"></i> 5.7% from yesterday
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div>
+                        <div class="stat-value">47.3%</div>
+                        <div class="stat-label">Growth Rate</div>
+                    </div>
+                    <div class="stat-icon icon-growth">
+                        <i class="fas fa-chart-bar"></i>
+                    </div>
+                </div>
+                <div class="stat-change change-down">
+                    <i class="fas fa-arrow-down"></i> 2.1% from last quarter
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="content-grid">
+            <!-- Chart Section -->
+            <div class="chart-container">
+                <div class="section-header">
+                    <h2>Revenue Analytics</h2>
+                    <select style="padding: 8px 15px; border-radius: 8px; border: 1px solid #ddd;">
+                        <option>Last 7 days</option>
+                        <option>Last 30 days</option>
+                        <option>Last quarter</option>
+                    </select>
+                </div>
+                <div class="chart-placeholder">
+                    <div style="text-align: center;">
+                        <i class="fas fa-chart-area" style="font-size: 48px; margin-bottom: 15px; color: #ccc;"></i>
+                        <p>Interactive chart would appear here</p>
+                        <p style="font-size: 14px; margin-top: 10px;">Connect your data source to visualize metrics</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Activity -->
+            <div class="recent-activity">
+                <div class="section-header">
+                    <h2>Recent Activity</h2>
+                    <span style="color: var(--primary); font-size: 14px;">View All</span>
+                </div>
+                <div class="activity-list">
+                    <div class="activity-item">
+                        <div class="activity-icon" style="background: var(--primary);">
+                            <i class="fas fa-shopping-cart"></i>
+                        </div>
+                        <div class="activity-details">
+                            <h4>New order #ORD-7842</h4>
+                            <p>Customer: John Smith • 10 min ago</p>
+                        </div>
+                    </div>
+                    <div class="activity-item">
+                        <div class="activity-icon" style="background: var(--accent);">
+                            <i class="fas fa-user-plus"></i>
+                        </div>
+                        <div class="activity-details">
+                            <h4>New user registered</h4>
+                            <p>Sarah Johnson • 25 min ago</p>
+                        </div>
+                    </div>
+                    <div class="activity-item">
+                        <div class="activity-icon" style="background: var(--secondary);">
+                            <i class="fas fa-file-invoice-dollar"></i>
+                        </div>
+                        <div class="activity-details">
+                            <h4>Payment processed</h4>
+                            <p>Amount: $249.99 • 1 hour ago</p>
+                        </div>
+                    </div>
+                    <div class="activity-item">
+                        <div class="activity-icon" style="background: #6A4C93;">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <div class="activity-details">
+                            <h4>Monthly report generated</h4>
+                            <p>January 2026 • 2 hours ago</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="quick-actions">
+            <div class="section-header">
+                <h2>Quick Actions</h2>
+            </div>
+            <div class="actions-grid">
+                <a href="#" class="action-btn">
+                    <div class="action-icon">
+                        <i class="fas fa-plus-circle"></i>
+                    </div>
+                    <span>Add Product</span>
+                </a>
+                <a href="#" class="action-btn">
+                    <div class="action-icon">
+                        <i class="fas fa-file-export"></i>
+                    </div>
+                    <span>Export Data</span>
+                </a>
+                <a href="#" class="action-btn">
+                    <div class="action-icon">
+                        <i class="fas fa-bell"></i>
+                    </div>
+                    <span>Notifications</span>
+                </a>
+                <a href="#" class="action-btn">
+                    <div class="action-icon">
+                        <i class="fas fa-question-circle"></i>
+                    </div>
+                    <span>Help Center</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>Butter Dashboard v2.1 • Last updated: January 2026</p>
+            <p style="margin-top: 10px; font-size: 12px;">
+                <i class="fas fa-shield-alt" style="color: var(--accent); margin-right: 5px;"></i>
+                Secure connection • All data is encrypted
+            </p>
+        </footer>
+    </div>
+
+    <script>
+        // Simple interactive elements
+        document.addEventListener('DOMContentLoaded', function() {
+            // Update time
+            function updateTime() {
+                const now = new Date();
+                document.querySelector('.title p').textContent = 
+                    `Analytics & Management Console • ${now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}`;
+            }
+            updateTime();
+            setInterval(updateTime, 60000);
+
+            // Animate stat cards on hover
+            const statCards = document.querySelectorAll('.stat-card');
+            statCards.forEach(card => {
+                card.addEventListener('mouseenter', () => {
+                    const value = card.querySelector('.stat-value');
+                    const originalText = value.textContent;
+                    if (originalText.includes('$')) {
+                        const num = parseFloat(originalText.replace(/[^0-9.]/g, ''));
+                        value.textContent = '$' + (num + Math.random() * 100).toFixed(0);
+                        setTimeout(() => {
+                            value.textContent = originalText;
+                        }, 1000);
+                    }
+                });
+            });
+
+            // Quick action button effects
+            const actionButtons = document.querySelectorAll('.action-btn');
+            actionButtons.forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const icon = this.querySelector('.action-icon');
+                    icon.style.transform = 'scale(1.2)';
+                    setTimeout(() => {
+                        icon.style.transform = 'scale(1)';
+                    }, 300);
+                    
+                    // Show temporary notification
+                    const notification = document.createElement('div');
+                    notification.style.cssText = `
+                        position: fixed;
+                        top: 20px;
+                        right: 20px;
+                        background: var(--primary);
+                        color: white;
+                        padding: 15px 25px;
+                        border-radius: 10px;
+                        z-index: 1000;
+                        animation: slideIn 0.3s ease;
+                    `;
+                    notification.textContent = `Action: ${this.querySelector('span').textContent}`;
+                    document.body.appendChild(notification);
+                    
+                    setTimeout(() => {
+                        notification.style.animation = 'slideOut 0.3s ease';
+                        setTimeout(() => notification.remove(), 300);
+                    }, 2000);
+                });
+            });
+
+            // Add CSS animations
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes slideIn {
+                    from { transform: translateX(100%); opacity: 0; }
+                    to { transform: translateX(0); opacity: 1; }
+                }
+                @keyframes slideOut {
+                    from { transform: translateX(0); opacity: 1; }
+                    to { transform: translateX(100%); opacity: 0; }
+                }
+            `;
+            document.head.appendChild(style);
+        });
+    </script>
+</body>
+</html>

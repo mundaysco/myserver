@@ -56,7 +56,7 @@ router.get("/", (req, res) => {
         <h1>📊 Clover Dashboard Hub</h1>
         <p>Select a dashboard to view:</p>
         
-        <div class="dashboard-grid">
+                <div class="dashboard-grid">
             <a href="/clover/sales?merchant_id=${merchant_id || ''}" class="dashboard-card sales">
                 <h3><span class="icon">📈</span> Sales Dashboard</h3>
                 <p>View sales data and analytics</p>
@@ -70,6 +70,11 @@ router.get("/", (req, res) => {
             <a href="/clover/simple?merchant_id=${merchant_id || ''}" class="dashboard-card simple">
                 <h3><span class="icon">🔄</span> Simple Dashboard</h3>
                 <p>Basic dashboard view</p>
+            </a>
+            
+            <a href="/clover/butter?merchant_id=${merchant_id || ''}" class="dashboard-card" style="border-left: 5px solid #FF6B35;">
+                <h3><span class="icon">🧈</span> Butter Dashboard</h3>
+                <p>Advanced analytics & management</p>
             </a>
             
             <a href="/donations?merchant_id=${merchant_id || ''}" class="dashboard-card donations">
@@ -108,4 +113,11 @@ router.get("/simple", (req, res) => {
   res.sendFile(path.join(__dirname, "../clover-simple.html"));
 });
 
+// Butter Dashboard
+router.get("/butter", (req, res) => {
+  res.sendFile(path.join(__dirname, "../butter-dashboard.html"));
+});
+
 module.exports = router;
+
+
