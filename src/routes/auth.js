@@ -263,18 +263,7 @@ router.get("/orders", async (req, res) => {
       data: response.data,
       timestamp: new Date().toISOString()
     });
-
-  } catch (error) {
-    console.error("Orders API error:", error.message);
-    res.status(500).json({
-      success: false,
-      error: "Failed to fetch orders",
-      message: error.response?.data || error.message
-    });
-  }
-});
-
-// Get items from Clover
+  // Get items from Clover
 router.get("/items", async (req, res) => {
   try {
     const merchantId = req.query.merchant_id || "Q82R0D2NSRR81";
@@ -305,6 +294,17 @@ router.get("/items", async (req, res) => {
       data: response.data,
       timestamp: new Date().toISOString()
     });
+
+  } catch (error) {
+    console.error("Items API error:", error.message);
+    res.status(500).json({
+      success: false,
+      error: "Failed to fetch items",
+      message: error.response?.data || error.message
+    });
+  }
+});
+
 // Get employees from Clover
 router.get("/employees", async (req, res) => {
   try {
@@ -459,7 +459,6 @@ router.get("/real-merchant", async (req, res) => {
       status: error.response?.status
     });
   }
-});
 });
 
 module.exports = router;
