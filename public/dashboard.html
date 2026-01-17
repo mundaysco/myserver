@@ -215,5 +215,54 @@
         updateStats();
         updateResults();
     </script>
+    <div style="text-align:center;margin:40px 0;padding:20px;background:#e9ecef;border-radius:10px;">
+        <h3>🔐 Real Clover OAuth Test</h3>
+        <p>Test the REAL OAuth flow with your app ID: JD06DKTZ0E7MT</p>
+        <button onclick="startRealOAuth()" style="background:#00a859;color:white;padding:15px 30px;border:none;border-radius:5px;font-size:16px;cursor:pointer;">
+            Connect to Clover (REAL OAuth)
+        </button>
+        <div id="oauth-result" style="margin-top:20px;"></div>
+    </div>
+    
+    <script>
+        function startRealOAuth() {
+            const clientId = "JD06DKTZ0E7MT";
+            const redirectUri = encodeURIComponent("https://myserver-wk8h.onrender.com/callback");
+            const authUrl = `https://www.clover.com/oauth/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=code`;
+            window.location.href = authUrl;
+        }
+        
+        // Check URL for OAuth response
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.has('code')) {
+            document.getElementById('oauth-result').innerHTML = `
+                <div style="background:#d4edda;padding:15px;border-radius:5px;">
+                    <h4>✅ OAuth Code Received!</h4>
+                    <p>Code: ${urlParams.get('code')}</p>
+                    <p>Merchant ID: ${urlParams.get('merchant_id') || 'Not provided'}</p>
+                    <button onclick="exchangeToken('${urlParams.get('code')}')">Exchange for Token</button>
+                </div>
+            `;
+        }
+        
+        async function exchangeToken(code) {
+            try {
+                const response = await fetch('/exchange', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({code: code})
+                });
+                const data = await response.json();
+                if (data.success) {
+                    alert(`✅ Token received! Access: ${data.access_token.substring(0, 30)}...`);
+                } else {
+                    alert(`❌ Failed: ${data.error}`);
+                }
+            } catch (error) {
+                alert(`❌ Error: ${error.message}`);
+            }
+        }
+    </script>
 </body>
 </html>
+
