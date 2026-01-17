@@ -1,0 +1,1113 @@
+<<<<<<< HEAD
+﻿<!DOCTYPE html>
+=======
+<!DOCTYPE html>
+>>>>>>> ef6661a16c76a6b6037674a6d465afd9a9e0d4a1
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<<<<<<< HEAD
+    <title>Butter • Complete Clover Integration</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #8b5cf6;
+            --primary-dark: #7c3aed;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --dark: #1f2937;
+            --light: #f9fafb;
+            --gray: #6b7280;
+            --border: #374151;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color: var(--light);
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: white;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 24px;
+            background: linear-gradient(135deg, #a78bfa, #fff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .badge {
+            padding: 8px 16px;
+            background: rgba(16, 185, 129, 0.15);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            border-radius: 20px;
+            font-size: 14px;
+            color: var(--success);
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: rgba(30, 41, 59, 0.8);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 25px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+        }
+
+        .step-indicator {
+            display: flex;
+            gap: 20px;
+            margin: 20px 0 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .step {
+=======
+    <title>🧈 Butter - Smooth Clover Integration</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+            padding: 40px;
+            text-align: center;
+            color: #333;
+        }
+        
+        .header h1 {
+            font-size: 3em;
+            margin-bottom: 10px;
+        }
+        
+        .header .tagline {
+            font-size: 1.2em;
+            opacity: 0.8;
+        }
+        
+        .content {
+            padding: 40px;
+        }
+        
+        .card {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 25px;
+            border-left: 5px solid #FFD700;
+        }
+        
+        .card h3 {
+            color: #333;
+            margin-bottom: 15px;
+>>>>>>> ef6661a16c76a6b6037674a6d465afd9a9e0d4a1
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+<<<<<<< HEAD
+
+        .step-number {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--dark);
+            border: 2px solid var(--border);
+=======
+        
+        .btn {
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+            color: #333;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 165, 0, 0.3);
+        }
+        
+        .btn.secondary {
+            background: #f8f9fa;
+            border: 2px solid #FFD700;
+            color: #333;
+        }
+        
+        .status {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .status-item {
+            flex: 1;
+            text-align: center;
+            padding: 15px;
+            background: white;
+            border-radius: 10px;
+            border: 2px solid #f0f0f0;
+        }
+        
+        .status-item.active {
+            border-color: #4CAF50;
+        }
+        
+        .status-item.inactive {
+            border-color: #f44336;
+        }
+        
+        .code-display {
+            background: #333;
+            color: #FFD700;
+            padding: 15px;
+            border-radius: 10px;
+            font-family: monospace;
+            margin: 15px 0;
+            word-break: break-all;
+        }
+        
+        #result {
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 10px;
+            display: none;
+        }
+        
+        .result-success {
+            background: #d4edda;
+            border-left: 5px solid #28a745;
+        }
+        
+        .result-error {
+            background: #f8d7da;
+            border-left: 5px solid #dc3545;
+        }
+        
+        .result-loading {
+            background: #d1ecf1;
+            border-left: 5px solid #17a2b8;
+        }
+        
+        .step {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            padding: 15px;
+            background: white;
+            border-radius: 10px;
+            border: 2px solid #f0f0f0;
+        }
+        
+        .step-number {
+            background: #FFD700;
+            color: #333;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+>>>>>>> ef6661a16c76a6b6037674a6d465afd9a9e0d4a1
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+<<<<<<< HEAD
+            color: var(--gray);
+        }
+
+        .step.active .step-number {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: white;
+        }
+
+        .step.completed .step-number {
+            background: var(--success);
+            border-color: var(--success);
+            color: white;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--gray);
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 12px 16px;
+            background: rgba(255, 255, 255, 0.07);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            color: var(--light);
+            font-size: 14px;
+            border: 1px solid var(--border);
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px -5px rgba(139, 92, 246, 0.3);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--light);
+            border: 1px solid var(--border);
+        }
+
+        .code-block {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 16px;
+            font-family: "Courier New", monospace;
+            font-size: 12px;
+            overflow-x: auto;
+            margin: 10px 0;
+        }
+
+        .token-display {
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            border-radius: 8px;
+            padding: 16px;
+            margin: 15px 0;
+            font-family: "Courier New", monospace;
+            font-size: 12px;
+            word-break: break-all;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        #toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--dark);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 15px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.3s;
+        }
+
+        #toast.show {
+            transform: translateY(0);
+            opacity: 1;
+=======
+            margin-right: 15px;
+        }
+        
+        .step.completed {
+            border-color: #4CAF50;
+            background: #f0f9f0;
+        }
+        
+        .step.active {
+            border-color: #FFD700;
+            background: #fffaf0;
+>>>>>>> ef6661a16c76a6b6037674a6d465afd9a9e0d4a1
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+<<<<<<< HEAD
+        <header>
+            <div class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-butterfly"></i>
+                </div>
+                <div>
+                    <h1>Butter</h1>
+                    <p style="color: var(--gray); margin: 5px 0 0; font-size: 14px;">Complete Clover Integration</p>
+                </div>
+            </div>
+            <div class="badge" id="statusBadge">
+                <i class="fas fa-circle-check"></i> Server Ready
+            </div>
+        </header>
+
+        <div class="grid">
+            <!-- Left Column: OAuth Flow -->
+            <div class="card">
+                <h2>OAuth Authorization Flow</h2>
+                
+                <div class="step-indicator">
+                    <div class="step active" id="step1">
+                        <div class="step-number">1</div>
+                        <div class="step-text">Generate Auth URL</div>
+                    </div>
+                    <div class="step" id="step2">
+                        <div class="step-number">2</div>
+                        <div class="step-text">Authorize</div>
+                    </div>
+                    <div class="step" id="step3">
+                        <div class="step-number">3</div>
+                        <div class="step-text">Get Token</div>
+                    </div>
+                </div>
+
+                <!-- Step 1 -->
+                <div id="section1">
+                    <div class="form-group">
+                        <label>Merchant ID</label>
+                        <input type="text" id="merchantId" placeholder="e.g., Q82R0D2NSRR81" value="Q82R0D2NSRR81">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Redirect URI</label>
+                        <input type="text" id="redirectUri" value="http://localhost:3000/oauth/callback">
+                        <small style="color: var(--gray); font-size: 12px;">Must match your Clover app settings</small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Client ID (optional)</label>
+                        <input type="text" id="clientId" placeholder="Leave empty to use server config">
+                    </div>
+                    
+                    <button class="btn btn-primary" onclick="generateAuthUrl()" style="width: 100%;">
+                        <i class="fas fa-link"></i> Generate Authorization URL
+                    </button>
+                </div>
+
+                <!-- Step 2 -->
+                <div id="section2" class="hidden">
+                    <div class="form-group">
+                        <label>Authorization URL</label>
+                        <div class="code-block" id="authUrlDisplay" style="cursor: pointer;" onclick="copyToClipboard('authUrlDisplay')">
+                            Click to copy
+                        </div>
+                    </div>
+                    
+                    <div style="display: flex; gap: 10px; margin: 20px 0;">
+                        <button class="btn btn-secondary" onclick="openAuthUrl()">
+                            <i class="fas fa-external-link-alt"></i> Open in Browser
+                        </button>
+                        <button class="btn btn-secondary" onclick="checkForCode()">
+                            <i class="fas fa-sync"></i> Check for Code
+                        </button>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Authorization Code</label>
+                        <input type="text" id="authCode" placeholder="Will be auto-filled from URL or paste manually">
+                    </div>
+                    
+                    <button class="btn btn-primary" onclick="goToStep3()" style="width: 100%;">
+                        <i class="fas fa-arrow-right"></i> Continue to Token Exchange
+                    </button>
+                </div>
+
+                <!-- Step 3 -->
+                <div id="section3" class="hidden">
+                    <div class="form-group">
+                        <label>Client Secret (optional)</label>
+                        <input type="password" id="clientSecret" placeholder="Leave empty to use server config">
+                    </div>
+                    
+                    <button class="btn btn-primary" onclick="exchangeToken()" style="width: 100%; margin-bottom: 20px;">
+                        <i class="fas fa-exchange-alt"></i> Exchange Code for Token
+                    </button>
+                    
+                    <div id="tokenSection" class="hidden">
+                        <div class="token-display" id="accessTokenDisplay"></div>
+                        
+                        <div style="display: flex; gap: 10px; margin: 15px 0;">
+                            <button class="btn btn-secondary" onclick="copyToken()">
+                                <i class="fas fa-copy"></i> Copy Token
+                            </button>
+                            <button class="btn btn-secondary" onclick="testApi()">
+                                <i class="fas fa-bolt"></i> Test API
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column: API Tester -->
+            <div class="card">
+                <h2>API Tester</h2>
+                
+                <div class="form-group">
+                    <label>Access Token</label>
+                    <textarea id="apiAccessToken" rows="3" placeholder="Paste access token here"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label>Merchant ID</label>
+                    <input type="text" id="apiMerchantId" placeholder="Merchant ID">
+                </div>
+                
+                <div class="form-group">
+                    <label>Endpoint</label>
+                    <select id="apiEndpoint">
+                        <option value="/v3/merchants/{mId}">Get Merchant Info</option>
+                        <option value="/v3/merchants/{mId}/orders">Get Orders</option>
+                        <option value="/v3/merchants/{mId}/payments">Get Payments</option>
+                        <option value="/v3/merchants/{mId}/items">Get Items</option>
+                        <option value="/v3/merchants/{mId}/customers">Get Customers</option>
+                    </select>
+                </div>
+                
+                <button class="btn btn-primary" onclick="callApi()" style="width: 100%; margin-bottom: 20px;">
+                    <i class="fas fa-play"></i> Call API
+                </button>
+                
+                <div id="apiResult" class="code-block" style="height: 200px; overflow-y: auto;">
+                    API results will appear here...
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom: System Info -->
+        <div class="card">
+            <h2>System Information</h2>
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;">
+                <div>
+                    <h4 style="color: var(--gray); margin-bottom: 10px;">Backend Status</h4>
+                    <div id="backendStatus">Checking...</div>
+                </div>
+                <div>
+                    <h4 style="color: var(--gray); margin-bottom: 10px;">Server URL</h4>
+                    <div>http://localhost:3000</div>
+                </div>
+                <div>
+                    <h4 style="color: var(--gray); margin-bottom: 10px;">Callback URL</h4>
+                    <div>http://localhost:3000/oauth/callback</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast">
+        <div style="display: flex; align-items: center; gap: 10px;">
+            <i class="fas fa-check-circle" style="color: var(--success);"></i>
+            <div>
+                <div id="toastTitle" style="font-weight: 600;">Success</div>
+                <div id="toastMessage" style="font-size: 12px; color: var(--gray);">Operation completed</div>
+=======
+        <div class="header">
+            <h1>🧈 Butter</h1>
+            <p class="tagline">Smooth Clover Integration</p>
+        </div>
+        
+        <div class="content">
+            <div class="status">
+                <div class="status-item" id="status-app">
+                    <h3>App Status</h3>
+                    <p id="status-text">Checking...</p>
+                </div>
+                <div class="status-item" id="status-auth">
+                    <h3>Authorization</h3>
+                    <p>Not started</p>
+                </div>
+                <div class="status-item" id="status-token">
+                    <h3>Token</h3>
+                    <p>Not obtained</p>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h3>🚀 Quick Start</h3>
+                <div class="step" id="step1">
+                    <div class="step-number">1</div>
+                    <div>
+                        <strong>Get Authorization URL</strong>
+                        <p>Generate a URL to authorize with Clover</p>
+                        <button class="btn" onclick="getAuthUrl()">
+                            <span>🔗 Get Authorization URL</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="step" id="step2">
+                    <div class="step-number">2</div>
+                    <div>
+                        <strong>Authorize with Clover</strong>
+                        <p>Visit the generated URL and authorize the app</p>
+                        <a class="btn" id="auth-link" target="_blank" style="display: none;">
+                            <span>👑 Authorize with Clover</span>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="step" id="step3">
+                    <div class="step-number">3</div>
+                    <div>
+                        <strong>Exchange Code for Token</strong>
+                        <p>Convert the authorization code to an access token</p>
+                        <button class="btn" onclick="exchangeToken()" id="exchange-btn" style="display: none;">
+                            <span>🔄 Exchange Code</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card" id="code-card" style="display: none;">
+                <h3>🔐 Authorization Code</h3>
+                <div class="code-display" id="code-display"></div>
+                <p><small>This code will be automatically used for token exchange</small></p>
+            </div>
+            
+            <div id="result"></div>
+            
+            <div class="card">
+                <h3>⚙️ API Endpoints</h3>
+                <button class="btn secondary" onclick="testHealth()">Test Health Check</button>
+                <button class="btn secondary" onclick="getApiInfo()">Get API Info</button>
+                <button class="btn secondary" onclick="checkStoredTokens()">Check Stored Tokens</button>
+>>>>>>> ef6661a16c76a6b6037674a6d465afd9a9e0d4a1
+            </div>
+        </div>
+    </div>
+
+    <script>
+<<<<<<< HEAD
+        // Toast system
+        function showToast(title, message, type = "success") {
+            const toast = document.getElementById("toast");
+            const toastTitle = document.getElementById("toastTitle");
+            const toastMessage = document.getElementById("toastMessage");
+            
+            toastTitle.textContent = title;
+            toastMessage.textContent = message;
+            
+            // Set icon based on type
+            const icon = toast.querySelector("i");
+            if (type === "success") {
+                icon.className = "fas fa-check-circle";
+                icon.style.color = "#10b981";
+            } else if (type === "error") {
+                icon.className = "fas fa-times-circle";
+                icon.style.color = "#ef4444";
+            }
+            
+            toast.classList.add("show");
+            setTimeout(() => toast.classList.remove("show"), 3000);
+        }
+
+        // Copy to clipboard
+        function copyToClipboard(elementId) {
+            const element = document.getElementById(elementId);
+            const text = element.textContent;
+            
+            navigator.clipboard.writeText(text).then(() => {
+                showToast("Copied!", "Text copied to clipboard");
+            });
+        }
+
+        // Step navigation
+        function goToStep(stepNumber) {
+            // Hide all sections
+            document.getElementById("section1").classList.add("hidden");
+            document.getElementById("section2").classList.add("hidden");
+            document.getElementById("section3").classList.add("hidden");
+            
+            // Remove active from all steps
+            document.getElementById("step1").classList.remove("active", "completed");
+            document.getElementById("step2").classList.remove("active", "completed");
+            document.getElementById("step3").classList.remove("active", "completed");
+            
+            // Show target section and mark steps
+            if (stepNumber >= 1) {
+                document.getElementById("section1").classList.remove("hidden");
+                document.getElementById("step1").classList.add("completed");
+            }
+            if (stepNumber >= 2) {
+                document.getElementById("section2").classList.remove("hidden");
+                document.getElementById("step2").classList.add("completed");
+            }
+            if (stepNumber >= 3) {
+                document.getElementById("section3").classList.remove("hidden");
+                document.getElementById("step3").classList.add("completed");
+            }
+            
+            // Mark current step as active
+            document.getElementById(`step${stepNumber}`).classList.add("active");
+        }
+
+        // Generate Authorization URL
+        async function generateAuthUrl() {
+            const merchantId = document.getElementById("merchantId").value.trim();
+            const redirectUri = document.getElementById("redirectUri").value.trim();
+            const clientId = document.getElementById("clientId").value.trim();
+            
+            if (!merchantId) {
+                showToast("Error", "Please enter a Merchant ID", "error");
+                return;
+            }
+            
+            try {
+                const response = await fetch("/api/generate-auth-url", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        merchant_id: merchantId,
+                        redirect_uri: redirectUri,
+                        client_id: clientId || undefined
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    document.getElementById("authUrlDisplay").textContent = data.auth_url;
+                    document.getElementById("apiMerchantId").value = merchantId;
+                    goToStep(2);
+                    showToast("Success", "Authorization URL generated");
+                } else {
+                    showToast("Error", data.error || "Failed to generate URL", "error");
+                }
+            } catch (error) {
+                showToast("Error", "Network error: " + error.message, "error");
+            }
+        }
+
+        // Open auth URL in new window
+        function openAuthUrl() {
+            const url = document.getElementById("authUrlDisplay").textContent;
+            if (url && url !== "Click to copy") {
+                window.open(url, "_blank");
+            }
+        }
+
+        // Check URL for authorization code
+        function checkForCode() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const authCode = urlParams.get("auth_code");
+            const merchantId = urlParams.get("merchant_id");
+            
+            if (authCode) {
+                document.getElementById("authCode").value = authCode;
+                if (merchantId) {
+                    document.getElementById("merchantId").value = merchantId;
+                    document.getElementById("apiMerchantId").value = merchantId;
+                }
+                showToast("Code Found", "Authorization code detected in URL");
+            } else {
+                showToast("No Code", "No authorization code found in URL", "error");
+            }
+        }
+
+        // Go to step 3
+        function goToStep3() {
+            const authCode = document.getElementById("authCode").value.trim();
+            if (!authCode) {
+                showToast("Error", "Please enter an authorization code", "error");
+                return;
+            }
+            goToStep(3);
+        }
+
+        // Exchange code for token
+        async function exchangeToken() {
+            const authCode = document.getElementById("authCode").value.trim();
+            const merchantId = document.getElementById("merchantId").value.trim();
+            const clientId = document.getElementById("clientId").value.trim();
+            const clientSecret = document.getElementById("clientSecret").value.trim();
+            
+            if (!authCode) {
+                showToast("Error", "Authorization code is required", "error");
+                return;
+            }
+            
+            try {
+                const response = await fetch("/api/exchange-token", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        code: authCode,
+                        merchant_id: merchantId,
+                        client_id: clientId || undefined,
+                        client_secret: clientSecret || undefined
+=======
+        // Check URL for authorization code
+        const urlParams = new URLSearchParams(window.location.search);
+        const authCode = urlParams.get('code');
+        const merchantId = urlParams.get('merchant_id');
+        
+        // Update status on load
+        updateStatus();
+        
+        if (authCode) {
+            showCode(authCode, merchantId);
+            document.getElementById('step1').classList.add('completed');
+            document.getElementById('step2').classList.add('completed');
+            document.getElementById('step3').classList.add('active');
+            updateStatus('auth', 'Authorized');
+        }
+        
+        function updateStatus(stage = 'app', status = 'Ready') {
+            const statusMap = {
+                'app': 'Running ✅',
+                'auth': status === 'Authorized' ? 'Authorized ✅' : 'Not started',
+                'token': status === 'Token obtained' ? 'Obtained ✅' : 'Not obtained'
+            };
+            
+            document.getElementById('status-text').textContent = statusMap.app;
+            document.getElementById('status-auth').querySelector('p').textContent = statusMap.auth;
+            document.getElementById('status-token').querySelector('p').textContent = statusMap.token;
+        }
+        
+        function showResult(type, title, message, data = null) {
+            const resultEl = document.getElementById('result');
+            resultEl.style.display = 'block';
+            resultEl.className = `result-${type}`;
+            
+            let html = `<h3>${title}</h3><p>${message}</p>`;
+            
+            if (data) {
+                html += `<pre style="background: white; padding: 15px; border-radius: 5px; margin-top: 10px; overflow: auto;">${JSON.stringify(data, null, 2)}</pre>`;
+            }
+            
+            resultEl.innerHTML = html;
+            resultEl.scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        async function getAuthUrl() {
+            showResult('loading', '🔄 Generating...', 'Getting authorization URL...');
+            
+            try {
+                const response = await fetch('/auth/url');
+                const data = await response.json();
+                
+                if (data.success) {
+                    const authLink = document.getElementById('auth-link');
+                    authLink.href = data.auth_url;
+                    authLink.style.display = 'inline-flex';
+                    
+                    document.getElementById('step1').classList.add('completed');
+                    document.getElementById('step2').classList.add('active');
+                    
+                    showResult('success', '✅ URL Generated', 'Authorization URL ready. Click the link below to proceed.', {
+                        auth_url: data.auth_url.substring(0, 50) + '...'
+                    });
+                } else {
+                    showResult('error', '❌ Error', data.error || 'Failed to generate URL', data);
+                }
+            } catch (error) {
+                showResult('error', '❌ Network Error', error.message);
+            }
+        }
+        
+        function showCode(code, merchantId) {
+            const codeCard = document.getElementById('code-card');
+            const codeDisplay = document.getElementById('code-display');
+            const exchangeBtn = document.getElementById('exchange-btn');
+            
+            codeCard.style.display = 'block';
+            codeDisplay.textContent = code;
+            exchangeBtn.style.display = 'inline-flex';
+            
+            if (merchantId) {
+                codeDisplay.textContent += `\nMerchant ID: ${merchantId}`;
+            }
+        }
+        
+        async function exchangeToken() {
+            if (!authCode) {
+                showResult('error', '❌ No Code', 'No authorization code found. Please authorize first.');
+                return;
+            }
+            
+            // Get merchant_id from URL
+            const merchantId = urlParams.get('merchant_id');
+            
+            showResult('loading', '🔄 Exchanging...', 'Converting authorization code to access token...');
+            
+            try {
+                const response = await fetch('/auth/token', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        code: authCode,
+                        merchant_id: merchantId  // SEND MERCHANT_ID TO BACKEND
+>>>>>>> ef6661a16c76a6b6037674a6d465afd9a9e0d4a1
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+<<<<<<< HEAD
+                    const tokenDisplay = document.getElementById("accessTokenDisplay");
+                    tokenDisplay.textContent = data.access_token;
+                    document.getElementById("tokenSection").classList.remove("hidden");
+                    document.getElementById("apiAccessToken").value = data.access_token;
+                    showToast("Success", "Access token obtained!");
+                } else {
+                    showToast("Error", data.error || "Failed to exchange token", "error");
+                }
+            } catch (error) {
+                showToast("Error", "Network error: " + error.message, "error");
+            }
+        }
+
+        // Copy token to clipboard
+        function copyToken() {
+            const token = document.getElementById("accessTokenDisplay").textContent;
+            if (token) {
+                navigator.clipboard.writeText(token).then(() => {
+                    showToast("Copied!", "Access token copied to clipboard");
+                });
+            }
+        }
+
+        // Test API connection
+        async function testApi() {
+            const accessToken = document.getElementById("accessTokenDisplay").textContent;
+            const merchantId = document.getElementById("merchantId").value.trim();
+            
+            if (!accessToken || !merchantId) {
+                showToast("Error", "Token and Merchant ID required", "error");
+                return;
+            }
+            
+            document.getElementById("apiAccessToken").value = accessToken;
+            document.getElementById("apiMerchantId").value = merchantId;
+            
+            try {
+                const response = await fetch("/api/test-connection", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        access_token: accessToken,
+                        merchant_id: merchantId
+                    })
+                });
+                
+                const data = await response.json();
+                displayApiResult(data);
+            } catch (error) {
+                showToast("Error", "API test failed: " + error.message, "error");
+            }
+        }
+
+        // Make API call
+        async function callApi() {
+            const accessToken = document.getElementById("apiAccessToken").value.trim();
+            const merchantId = document.getElementById("apiMerchantId").value.trim();
+            const endpoint = document.getElementById("apiEndpoint").value;
+            
+            if (!accessToken || !merchantId) {
+                showToast("Error", "Access token and Merchant ID required", "error");
+                return;
+            }
+            
+            try {
+                const url = `/api/merchant/${merchantId}${endpoint.replace("{mId}", "")}`;
+                const response = await fetch(`${url}?access_token=${encodeURIComponent(accessToken)}`);
+                const data = await response.json();
+                displayApiResult(data);
+            } catch (error) {
+                showToast("Error", "API call failed: " + error.message, "error");
+            }
+        }
+
+        // Display API result
+        function displayApiResult(data) {
+            const resultDiv = document.getElementById("apiResult");
+            resultDiv.textContent = JSON.stringify(data, null, 2);
+            showToast("API Response", "Check the results below");
+        }
+
+        // Check backend health on load
+        async function checkBackendHealth() {
+            try {
+                const response = await fetch("/api/health");
+                const data = await response.json();
+                document.getElementById("backendStatus").innerHTML = 
+                    `<span style="color: #10b981;">✅ ${data.status}</span>`;
+                document.getElementById("statusBadge").innerHTML = 
+                    `<i class="fas fa-circle-check"></i> ${data.status.toUpperCase()}`;
+            } catch (error) {
+                document.getElementById("backendStatus").innerHTML = 
+                    `<span style="color: #ef4444;">❌ Backend offline</span>`;
+                document.getElementById("statusBadge").innerHTML = 
+                    `<i class="fas fa-times-circle"></i> OFFLINE`;
+                showToast("Backend Offline", "Start the server with: npm start", "error");
+            }
+        }
+
+        // Initialize
+        document.addEventListener("DOMContentLoaded", function() {
+            checkBackendHealth();
+            checkForCode();
+            
+            // Auto-fill from URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const authCode = urlParams.get("auth_code");
+            if (authCode) {
+                document.getElementById("authCode").value = authCode;
+                const merchantId = urlParams.get("merchant_id");
+                if (merchantId) {
+                    document.getElementById("merchantId").value = merchantId;
+                    goToStep(3);
+                } else {
+                    goToStep(2);
+                }
+            }
+        });
+    </script>
+</body>
+</html>
+=======
+                    document.getElementById('step3').classList.add('completed');
+                    updateStatus('token', 'Token obtained');
+                    
+                    showResult('success', '✅ Token Obtained!', data.message || 'Access token successfully retrieved.', {
+                        merchant_id: data.merchant_id,
+                        token_stored: data.token_stored,
+                        expires_in_hours: data.expires_in_hours,
+                        timestamp: data.timestamp
+                    });
+                } else {
+                    showResult('error', '❌ Exchange Failed', data.error || 'Failed to exchange token', data);
+                }
+            } catch (error) {
+                showResult('error', '❌ Network Error', error.message);
+            }
+        }
+        
+        async function testHealth() {
+            try {
+                const response = await fetch('/health');
+                const data = await response.json();
+                showResult('success', '✅ Health Check', 'Server is healthy', data);
+            } catch (error) {
+                showResult('error', '❌ Health Check Failed', error.message);
+            }
+        }
+        
+        async function getApiInfo() {
+            try {
+                const response = await fetch('/api');
+                const data = await response.json();
+                showResult('success', '📋 API Information', 'API endpoints and information', data);
+            } catch (error) {
+                showResult('error', '❌ API Info Failed', error.message);
+            }
+        }
+        
+        async function checkStoredTokens() {
+            try {
+                const response = await fetch('/auth/tokens');
+                const data = await response.json();
+                showResult('success', '🔐 Stored Tokens', `Found ${data.count} stored token(s)`, data);
+            } catch (error) {
+                showResult('error', '❌ Tokens Check Failed', error.message);
+            }
+        }
+        
+        // Initial health check
+        testHealth();
+    </script>
+</body>
+</html>
+>>>>>>> ef6661a16c76a6b6037674a6d465afd9a9e0d4a1
