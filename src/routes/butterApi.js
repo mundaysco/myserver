@@ -1,4 +1,4 @@
-﻿// src/routes/butterApi.js - Simplified version using OAuth utility
+﻿// src/routes/butterApi.js - Clean working version
 const express = require("express");
 const router = express.Router();
 const { getToken, makeCloverRequest } = require("../utils/cloverOAuth");
@@ -69,7 +69,7 @@ router.get("/orders", async (req, res) => {
             return res.status(400).json({ error: "Merchant ID required" });
         }
         
-        const orders = await makeCloverRequest(merchant_id, \`orders?limit=\${limit}&expand=lineItems\`);
+        const orders = await makeCloverRequest(merchant_id, `orders?limit=${limit}&expand=lineItems`);
         
         if (!orders) {
             return res.status(401).json({ error: "Authentication expired" });
@@ -102,6 +102,52 @@ router.get("/merchant", async (req, res) => {
         
     } catch (error) {
         console.error("Merchant API error:", error);
+        res.status(500).json({ error: error.message });
+    }
+});
+
+// Get items (inventory)
+router.get("/items", async (req, res) => {
+    try {
+        const { merchant_id, limit = 50 } = req.query;
+        
+        if (!merchant_id) {
+            return res.status(400).json({ error: "Merchant ID required" });
+        }
+        
+        const items = await makeCloverRequest(merchant_id, `items?limit=${limit}`);
+        
+        if (!items) {
+            return res.status(401).json({ error: "Authentication expired" });
+        }
+        
+        res.json(items);
+        
+    } catch (error) {
+        console.error("Items API error:", error);
+        res.status(500).json({ error: error.message });
+    }
+});
+
+// Get payments
+router.get("/payments", async (req, res) => {
+    try {
+        const { merchant_id, limit = 50 } = req.query;
+        
+        if (!merchant_id) {
+            return res.status(400).json({ error: "Merchant ID required" });
+        }
+        
+        const payments = await makeCloverRequest(merchant_id, `payments?limit=${limit}`);
+        
+        if (!payments) {
+            return res.status(401).json({ error: "Authentication expired" });
+        }
+        
+        res.json(payments);
+        
+    } catch (error) {
+        console.error("Payments API error:", error);
         res.status(500).json({ error: error.message });
     }
 });
