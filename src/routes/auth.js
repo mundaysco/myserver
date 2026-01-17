@@ -5,8 +5,6 @@ const router = express.Router();
 const APP_ID = process.env.CLOVER_APP_ID;
 const APP_SECRET = process.env.CLOVER_APP_SECRET;
 const REDIRECT_URI = process.env.REDIRECT_URI;
-
-// Import token storage
 const TokenStorage = require("../utils/tokenStorage");
 
 // Generate authorization URL
@@ -40,7 +38,6 @@ router.get("/callback", (req, res) => {
   }
 
   if (code) {
-    // Store code and merchant_id for frontend
     return res.redirect(`/?code=${code}&merchant_id=${merchant_id || ""}`);
   }
 
@@ -79,10 +76,8 @@ router.post("/token", async (req, res) => {
 
     console.log("✅ Token exchange successful, access_token received");
 
-    // Determine merchant_id: from token response, request body, or API call
     let finalMerchantId = tokenMerchantId || incomingMerchantId;
     
-    // If still no merchant_id, try to get it from Clover API
     if (!finalMerchantId && access_token) {
       try {
         console.log("🔍 Fetching merchant info from Clover API...");
@@ -99,7 +94,6 @@ router.post("/token", async (req, res) => {
       }
     }
 
-    // Save token securely
     if (finalMerchantId && access_token) {
       TokenStorage.saveToken(finalMerchantId, {
         access_token: access_token,
@@ -108,10 +102,8 @@ router.post("/token", async (req, res) => {
       console.log(`🔒 Token securely stored for merchant: ${finalMerchantId}`);
     } else {
       console.log("⚠️ Cannot save token: missing merchant_id or access_token");
-      console.log(`   merchant_id: ${finalMerchantId}, has_token: ${!!access_token}`);
     }
 
-    // Return success WITHOUT full token
     res.json({
       success: true,
       message: "Token exchange successful" + (finalMerchantId ? " and stored securely" : ""),
@@ -136,43 +128,8 @@ router.post("/token", async (req, res) => {
     });
   }
 });
-    // Save token securely
-    if (merchant_id && access_token) {
-      TokenStorage.saveToken(merchant_id, {
-        access_token: access_token,
-        expires_in: expires_in || null
-      });
-      console.log(`🔒 Token securely stored for merchant: ${merchant_id}`);
-    }
 
-    // Return success WITHOUT full token
-    res.json({
-      success: true,
-      message: "Token exchange successful and stored securely",
-      merchant_id: merchant_id,
-      token_stored: !!(merchant_id && access_token),
-      expires_in_hours: expires_in ? Math.floor(expires_in / 3600) : null,
-      timestamp: new Date().toISOString()
-      // NOTE: We don't send access_token in response
-    });
-
-  } catch (error) {
-    console.error("❌ Token exchange failed:", error.response?.data || error.message);
-
-    res.status(500).json({
-      success: false,
-      error: "Token exchange failed",
-      details: error.response?.data || error.message,
-      troubleshooting: [
-        "1. Authorization codes expire quickly - get a new one",
-        "2. Verify environment variables are set correctly",
-        "3. Check Clover app configuration"
-      ]
-    });
-  }
-});
-
-// Get stored token for a merchant (protected route)
+// Get stored token for a merchant
 router.get("/token/:merchantId", (req, res) => {
   const { merchantId } = req.params;
   const token = TokenStorage.getToken(merchantId);
@@ -185,7 +142,6 @@ router.get("/token/:merchantId", (req, res) => {
     });
   }
 
-  // Return token info without exposing full token in API
   res.json({
     success: true,
     merchant_id: merchantId,
