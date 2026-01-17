@@ -305,17 +305,6 @@ router.get("/items", async (req, res) => {
       data: response.data,
       timestamp: new Date().toISOString()
     });
-
-  } catch (error) {
-    console.error("Items API error:", error.message);
-    res.status(500).json({
-      success: false,
-      error: "Failed to fetch items",
-      message: error.response?.data || error.message
-    });
-  }
-});
-
 // Get employees from Clover
 router.get("/employees", async (req, res) => {
   try {
@@ -353,6 +342,114 @@ router.get("/employees", async (req, res) => {
       success: false,
       error: "Failed to fetch employees",
       message: error.response?.data || error.message
+    });
+  }
+});
+
+// Test endpoint with /me instead of /{id}
+router.get("/test-me", async (req, res) => {
+  try {
+    const merchantId = "Q82R0D2NSRR81";
+    const token = TokenStorage.getToken(merchantId);
+
+    console.log("=== TEST /me ENDPOINT ===");
+    console.log("Token exists:", !!token);
+    console.log("Access token:", token?.access_token?.substring(0, 30) + "...");
+
+    if (!token || !token.access_token) {
+      return res.status(401).json({ error: "No token" });
+    }
+
+    const response = await axios.get(
+      `https://sandbox.dev.clover.com/v3/merchants/me`,
+      {
+        headers: {
+          Authorization: `Bearer ${token.access_token}`,
+          Accept: "application/json"
+        }
+      }
+    );
+
+    res.json({
+      success: true,
+      data: response.data
+    });
+
+  } catch (error) {
+    console.error("Test /me error:", error.message);
+    res.status(500).json({
+      error: error.message,
+      details: error.response?.data
+    });
+  }
+});
+
+// API Key test endpoint
+router.get("/test-apikey", async (req, res) => {
+  try {
+    const API_KEY = "28f66577-ec74-76be-acac-55256d01dcaa";
+    
+    console.log("🔧 Testing with API key...");
+    
+    const response = await axios.get(
+      "https://sandbox.dev.clover.com/v3/merchants/Q82R0D2NSRR81",
+      {
+        headers: {
+          'Authorization': `Bearer ${API_KEY}`,
+          'Accept': 'application/json'
+        }
+      }
+    );
+    
+    res.json({
+      success: true,
+      method: "API Key",
+      data: response.data,
+      timestamp: new Date().toISOString()
+    });
+    
+  } catch (error) {
+    console.error("API Key test error:", error.message);
+    console.error("Error details:", error.response?.data);
+    res.status(500).json({
+      success: false,
+      error: "API Key test failed",
+      message: error.response?.data || error.message
+    });
+  }
+});
+
+// API Key endpoint (REAL WORKING METHOD)
+router.get("/real-merchant", async (req, res) => {
+  try {
+    const API_KEY = "28f66577-ec74-76be-acac-55256d01dcaa";
+    
+    console.log("🚀 Using REAL API key");
+    
+    const response = await axios.get(
+      "https://sandbox.dev.clover.com/v3/merchants/Q82R0D2NSRR81",
+      {
+        headers: {
+          'Authorization': `Bearer ${API_KEY}`,
+          'Accept': 'application/json'
+        }
+      }
+    );
+    
+    res.json({
+      success: true,
+      message: "API Key method works!",
+      data: response.data,
+      timestamp: new Date().toISOString()
+    });
+    
+  } catch (error) {
+    console.error("API Key error:", error.message);
+    console.error("Error details:", error.response?.data);
+    res.status(500).json({
+      success: false,
+      error: "API Key failed",
+      details: error.response?.data || error.message
     });
   }
 });
