@@ -1,31 +1,47 @@
 ﻿const express = require('express');
 const router = express.Router();
 const path = require('path');
+const { exchangeCodeForToken, getToken } = require('../utils/cloverOAuth');
 
-// Dashboard Hub
-router.get("/", (req, res) => {
+// Dashboard Hub with OAuth handling
+router.get("/", async (req, res) => {
   const { merchant_id, code, employee_id, client_id } = req.query;
   
-  // If we have a code, exchange for token first
+  console.log("📱 Dashboard hub accessed with:", { merchant_id, hasCode: !!code });
+  
+  // If we have a code, exchange it for token first
   if (code && merchant_id) {
-    const html = \`
-    <!DOCTYPE html>
-    <html>
-    <head>
-        <title>Processing OAuth...</title>
-        <script>
-            // Store merchant_id in localStorage
-            localStorage.setItem('clover_merchant_id', '${merchant_id}');
-            // Redirect to dashboard hub
-            window.location.href = '/clover?merchant_id=${merchant_id}';
-        </script>
-    </head>
-    <body>
-        <h2>Processing authentication...</h2>
-    </body>
-    </html>
-    \`;
-    return res.send(html);
+    try {
+      console.log("🔄 Processing OAuth code exchange...");
+      await exchangeCodeForToken(merchant_id, code);
+      
+      // Redirect to same page without code (to avoid code reuse)
+      return res.redirect(`/clover?merchant_id=${merchant_id}`);
+      
+    } catch (error) {
+      console.error("❌ OAuth error:", error);
+      
+      // Still show dashboard but with error
+      const html = \`
+      <!DOCTYPE html>
+      <html>
+      <head><title>OAuth Error</title></head>
+      <body>
+        <h2>OAuth Error</h2>
+        <p>Failed to authenticate: ${error.message}</p>
+        <p><a href="/clover?merchant_id=${merchant_id}">Continue to Dashboard</a></p>
+      </body>
+      </html>
+      \`;
+      return res.send(html);
+    }
+  }
+  
+  // Check if we have a valid token
+  let hasValidToken = false;
+  if (merchant_id) {
+    const tokenData = await getToken(merchant_id);
+    hasValidToken = !!tokenData;
   }
   
   // Main dashboard hub
@@ -38,6 +54,17 @@ router.get("/", (req, res) => {
         body { font-family: Arial; padding: 40px; background: #f0f2f5; }
         .container { max-width: 1200px; margin: 0 auto; }
         h1 { color: #2c3e50; border-bottom: 3px solid #3498db; padding-bottom: 10px; }
+        
+        .status-badge {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            margin-left: 10px;
+        }
+        .status-connected { background: #d4edda; color: #155724; }
+        .status-disconnected { background: #f8d7da; color: #721c24; }
+        
         .dashboard-grid { 
             display: grid; 
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
@@ -73,44 +100,70 @@ router.get("/", (req, res) => {
         .simple { border-left: 5px solid #f39c12; }
         .butter { border-left: 5px solid #FF6B35; }
         .donations { border-left: 5px solid #9b59b6; }
+        
+        .auth-info {
+            background: #fff8e1;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>📊 Dashboard Hub</h1>
-        <p>Merchant ID: <code>${merchant_id || 'Not authenticated'}</code></p>
+        
+        <div class="auth-info">
+            <h3>🔑 Authentication Status</h3>
+            <p>Merchant ID: <code>${merchant_id || 'Not set'}</code></p>
+            <p>Token Status: 
+                <span class="status-badge ${hasValidToken ? 'status-connected' : 'status-disconnected'}">
+                    ${hasValidToken ? '✅ Connected to Clover' : '❌ Not authenticated'}
+                </span>
+            </p>
+            ${!hasValidToken && merchant_id ? 
+                '<p><strong>Action needed:</strong> Launch this app from Clover Sandbox to authenticate.</p>' : 
+                ''}
+        </div>
         
         <div class="dashboard-grid">
             <a href="/clover/sales?merchant_id=${merchant_id || ''}" class="dashboard-card sales">
                 <h3><span class="icon">📈</span> Sales Dashboard</h3>
                 <p>View sales data and analytics</p>
+                ${hasValidToken ? '<small style="color: #2ECC71;">✅ Live data</small>' : '<small style="color: #999;">⚡ Requires auth</small>'}
             </a>
             
             <a href="/clover/analytics?merchant_id=${merchant_id || ''}" class="dashboard-card analytics">
                 <h3><span class="icon">📊</span> Analytics Dashboard</h3>
                 <p>Detailed analytics and reporting</p>
-            </a>
-            
-            <a href="/clover/simple?merchant_id=${merchant_id || ''}" class="dashboard-card simple">
-                <h3><span class="icon">🔄</span> Simple Dashboard</h3>
-                <p>Basic dashboard view</p>
+                ${hasValidToken ? '<small style="color: #2ECC71;">✅ Live data</small>' : '<small style="color: #999;">⚡ Requires auth</small>'}
             </a>
             
             <a href="/clover/butter?merchant_id=${merchant_id || ''}" class="dashboard-card butter">
                 <h3><span class="icon">🧈</span> Butter Dashboard</h3>
                 <p>Advanced analytics & management</p>
+                ${hasValidToken ? '<small style="color: #2ECC71;">✅ Live data</small>' : '<small style="color: #999;">⚡ Requires auth</small>'}
             </a>
             
             <a href="/donations?merchant_id=${merchant_id || ''}" class="dashboard-card donations">
                 <h3><span class="icon">🕌</span> Donations Dashboard</h3>
                 <p>Omar Mosque donation tracking</p>
             </a>
+            
+            <a href="/clover/simple?merchant_id=${merchant_id || ''}" class="dashboard-card simple">
+                <h3><span class="icon">🔄</span> Simple Dashboard</h3>
+                <p>Basic dashboard view</p>
+            </a>
         </div>
         
-        <div style="margin-top: 40px; padding: 20px; background: #fff8e1; border-radius: 10px;">
-            <h3>🔑 Authentication Status</h3>
-            <p>Merchant ID: <strong>${merchant_id || 'Not set'}</strong></p>
-            <p>To re-authenticate: Go to Clover Sandbox → Apps → Your App</p>
+        <div style="margin-top: 40px; padding: 20px; background: white; border-radius: 10px; border-left: 5px solid #3498db;">
+            <h3>📋 How to Use</h3>
+            <ol>
+                <li>Go to <a href="https://sandbox.dev.clover.com" target="_blank">Clover Sandbox</a></li>
+                <li>Login as a merchant (not developer)</li>
+                <li>Go to Apps → Your Apps → Click this app</li>
+                <li>That's it! You'll be automatically authenticated.</li>
+            </ol>
         </div>
     </div>
 </body>
