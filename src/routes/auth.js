@@ -6,6 +6,9 @@ const APP_ID = process.env.CLOVER_APP_ID;
 const APP_SECRET = process.env.CLOVER_APP_SECRET;
 const REDIRECT_URI = process.env.REDIRECT_URI;
 
+// Import token storage
+const TokenStorage = require("../utils/tokenStorage");
+
 // Generate authorization URL
 router.get("/url", (req, res) => {
   if (!APP_ID || !REDIRECT_URI) {
@@ -76,14 +79,24 @@ router.post("/token", async (req, res) => {
 
     console.log("✅ Token exchange successful for merchant:", merchant_id);
 
+    // Save token securely
+    if (merchant_id && access_token) {
+      TokenStorage.saveToken(merchant_id, {
+        access_token: access_token,
+        expires_in: expires_in || null
+      });
+      console.log(`🔒 Token securely stored for merchant: ${merchant_id}`);
+    }
+
+    // Return success WITHOUT full token
     res.json({
       success: true,
-      message: "Token exchange successful",
-      merchant_id,
-      access_token: access_token ? `${access_token.substring(0, 20)}...` : null,
-      expires_in,
-      expires_in_hours: Math.floor(expires_in / 3600),
+      message: "Token exchange successful and stored securely",
+      merchant_id: merchant_id,
+      token_stored: !!(merchant_id && access_token),
+      expires_in_hours: expires_in ? Math.floor(expires_in / 3600) : null,
       timestamp: new Date().toISOString()
+      // NOTE: We don't send access_token in response
     });
 
   } catch (error) {
@@ -100,6 +113,42 @@ router.post("/token", async (req, res) => {
       ]
     });
   }
+});
+
+// Get stored token for a merchant (protected route)
+router.get("/token/:merchantId", (req, res) => {
+  const { merchantId } = req.params;
+  const token = TokenStorage.getToken(merchantId);
+  
+  if (!token) {
+    return res.status(404).json({
+      success: false,
+      error: "Token not found",
+      message: `No token stored for merchant ${merchantId}`
+    });
+  }
+
+  // Return token info without exposing full token in API
+  res.json({
+    success: true,
+    merchant_id: merchantId,
+    token_available: true,
+    obtained_at: token.obtained_at,
+    expires_in: token.expires_in,
+    expires_soon: token.expires_in ? 
+      (Date.now() > new Date(token.obtained_at).getTime() + (token.expires_in * 1000 * 0.9)) : 
+      false
+  });
+});
+
+// List all merchants with tokens
+router.get("/tokens", (req, res) => {
+  const merchants = TokenStorage.listMerchants();
+  res.json({
+    success: true,
+    count: merchants.length,
+    merchants: merchants
+  });
 });
 
 module.exports = router;
