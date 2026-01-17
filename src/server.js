@@ -8,21 +8,8 @@ const PORT = process.env.PORT || 3000;
 // Serve static files
 app.use(express.static("public"));
 
-// Check if routes exist before requiring
-let cloverDashboard;
-try {
-  cloverDashboard = require("./routes/cloverDashboard");
-} catch (err) {
-  console.log("Creating basic cloverDashboard...");
-  // Create a basic router if file doesn't exist
-  const express = require("express");
-  cloverDashboard = express.Router();
-  cloverDashboard.get("/", (req, res) => {
-    res.send("<h1>Clover Dashboard Hub</h1><p>Basic dashboard - routes file will be created automatically.</p>");
-  });
-}
-
-// Use the clover dashboard routes
+// Import and use clover dashboard
+const cloverDashboard = require("./routes/cloverDashboard");
 app.use("/clover", cloverDashboard);
 
 // Serve donation dashboard
@@ -40,12 +27,25 @@ app.get("/callback", (req, res) => {
   res.redirect("/auth/callback?merchant_id=" + (req.query.merchant_id || '') + "&code=" + (req.query.code || ''));
 });
 
+// HEALTH CHECK ENDPOINT FOR RENDER (CRITICAL)
+app.get("/health", (req, res) => {
+  res.json({ 
+    status: "healthy", 
+    timestamp: new Date().toISOString(),
+    service: "max-clover-dashboards"
+  });
+});
+
+// Simple JSON endpoint for Render checks
+app.get("/api/status", (req, res) => {
+  res.json({ status: "OK", message: "Server is running" });
+});
+
 app.listen(PORT, () => {
   console.log(`🚀 Server running on port ${PORT}`);
   console.log(`📊 Available endpoints:`);
-  console.log(`   http://localhost:${PORT}/              - Dashboard Hub`);
-  console.log(`   http://localhost:${PORT}/clover/sales   - Sales Dashboard`);
-  console.log(`   http://localhost:${PORT}/clover/analytics - Analytics`);
-  console.log(`   http://localhost:${PORT}/clover/simple  - Simple Dashboard`);
-  console.log(`   http://localhost:${PORT}/donations      - Donations`);
+  console.log(`   http://localhost:${PORT}/`);
+  console.log(`   http://localhost:${PORT}/clover/sales`);
+  console.log(`   http://localhost:${PORT}/donations`);
+  console.log(`   http://localhost:${PORT}/health (Render health check)`);
 });
