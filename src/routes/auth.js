@@ -16,12 +16,21 @@ router.get("/url", (req, res) => {
     });
   }
 
-  const authUrl = `https://sandbox.dev.clover.com/oauth/authorize?client_id=${APP_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&response_type=code`;
+  // ADD THESE SCOPES - REQUIRED FOR API PERMISSIONS
+  const scopes = [
+    'com.clover.merchant:read',
+    'com.clover.orders:read',
+    'com.clover.items:read',
+    'com.clover.employees:read'
+  ].join('+');
+
+  const authUrl = `https://sandbox.dev.clover.com/oauth/authorize?client_id=${APP_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&response_type=code&scope=${scopes}`;
   
   res.json({
     success: true,
     auth_url: authUrl,
-    message: "Use this URL to authorize with Clover"
+    message: "Use this URL to authorize with Clover",
+    scopes: scopes
   });
 });
 
@@ -75,6 +84,7 @@ router.post("/token", async (req, res) => {
     const { access_token, merchant_id: tokenMerchantId, expires_in } = response.data;
 
     console.log("✅ Token exchange successful, access_token received");
+    console.log("🔍 Full response:", JSON.stringify(response.data));
 
     let finalMerchantId = tokenMerchantId || incomingMerchantId;
     
@@ -97,7 +107,8 @@ router.post("/token", async (req, res) => {
     if (finalMerchantId && access_token) {
       TokenStorage.saveToken(finalMerchantId, {
         access_token: access_token,
-        expires_in: expires_in || null
+        expires_in: expires_in || null,
+        obtained_at: new Date().toISOString()
       });
       console.log(`🔒 Token securely stored for merchant: ${finalMerchantId}`);
     } else {
@@ -173,6 +184,17 @@ router.get("/merchant", async (req, res) => {
     const merchantId = req.query.merchant_id || "Q82R0D2NSRR81";
     const token = TokenStorage.getToken(merchantId);
 
+    console.log("=== DEBUG MERCHANT API CALL ===");
+    console.log("Merchant ID:", merchantId);
+    console.log("Token exists:", !!token);
+    if (token) {
+      console.log("Token has access_token:", !!token.access_token);
+      console.log("Token obtained:", token.obtained_at);
+      console.log("Token age (seconds):", 
+        Math.floor((Date.now() - new Date(token.obtained_at).getTime()) / 1000));
+    }
+    console.log("==============================");
+
     if (!token || !token.access_token) {
       return res.status(401).json({
         success: false,
@@ -201,6 +223,7 @@ router.get("/merchant", async (req, res) => {
 
   } catch (error) {
     console.error("Merchant API error:", error.message);
+    console.error("Error details:", error.response?.data);
     res.status(500).json({
       success: false,
       error: "Failed to fetch merchant data",
@@ -334,5 +357,4 @@ router.get("/employees", async (req, res) => {
   }
 });
 
-module.exports = router;
 module.exports = router;
