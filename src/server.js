@@ -9,7 +9,7 @@ const PORT = process.env.PORT || 3000;
 app.use(express.static("public"));
 
 // Import and use clover dashboard
-const cloverDashboard = require("./routes/cloverDashboard");
+const cloverDashboard = require("./routes/cloverDashboard-fixed");
 app.use("/clover", cloverDashboard);
 
 // Serve donation dashboard
@@ -19,7 +19,7 @@ app.get("/donations", (req, res) => {
 
 // Redirect root to dashboard hub
 app.get("/", (req, res) => {
-  res.redirect("/clover");
+  res.redirect(`/clover?${req.url.split("?")[1] || ""}`);
 });
 
 // Handle OAuth callback
@@ -49,3 +49,5 @@ app.listen(PORT, () => {
   console.log(`   http://localhost:${PORT}/donations`);
   console.log(`   http://localhost:${PORT}/health (Render health check)`);
 });
+
+
