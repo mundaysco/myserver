@@ -115,9 +115,10 @@ router.get("/simple", (req, res) => {
 
 // Butter Dashboard
 router.get("/butter", (req, res) => {
-  res.sendFile(path.join(__dirname, "../butter-dashboard.html"));
+  res.sendFile(path.join(__dirname, "../butter-dashboard-real.html"));
 });
 
 module.exports = router;
+
 
 
