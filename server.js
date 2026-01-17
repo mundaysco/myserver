@@ -11,11 +11,11 @@ const APP_ID = process.env.CLOVER_APP_ID;
 const APP_SECRET = process.env.CLOVER_APP_SECRET;
 const REDIRECT_URI = process.env.REDIRECT_URI;
 
-console.log("=== MAX CLOVER APP ===");
+console.log("=== MAX CLOVER APP ===");;
 console.log("App ID:", APP_ID);
 console.log("App Secret:", APP_SECRET ? "âœ… Set" : "âŒ Missing");
 console.log("Redirect URI:", REDIRECT_URI);
-console.log("======================");
+console.log("=== MAX CLOVER APP ===");;
 
 app.get("/", (req, res) => {
   const { code, merchant_id } = req.query;
@@ -123,4 +123,5 @@ app.post("/exchange", async (req, res) => {
 app.listen(PORT, "0.0.0.0", () => {
   console.log("ðŸš€ Server: http://localhost:" + PORT);
 });
+
 
