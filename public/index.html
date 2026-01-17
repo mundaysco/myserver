@@ -226,11 +226,43 @@
             exchangeBtn.style.display = 'inline-flex';
         }
         
-        async function exchangeToken() {
+                async function exchangeToken() {
             if (!authCode) {
                 showResult('❌ No authorization code found', 'error');
                 return;
             }
+            
+            showResult('🔄 Exchanging code for token...', 'info');
+            
+            try {
+                const response = await fetch('/auth/token', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        code: authCode,
+                        merchant_id: merchantId
+                    })
+                });
+                
+                // Check if response is JSON
+                const contentType = response.headers.get("content-type");
+                if (!contentType || !contentType.includes("application/json")) {
+                    throw new Error(`Server returned ${response.status}: ${await response.text()}`);
+                }
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    document.getElementById('status-token').querySelector('p').textContent = 'Token obtained ✅';
+                    showResult(`✅ ${data.message}<br>Token: ${data.access_token?.substring(0, 30)}...<br>Expires in: ${data.expires_in_hours} hours`, 'success');
+                } else {
+                    showResult(`❌ Error: ${data.error}`, 'error');
+                }
+            } catch (error) {
+                showResult(`❌ ${error.message}`, 'error');
+                console.error("Token exchange error:", error);
+            }
+        }
             
             showResult('🔄 Exchanging code for token...', 'info');
             
@@ -262,3 +294,4 @@
     </script>
 </body>
 </html>
+
