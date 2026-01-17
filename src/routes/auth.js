@@ -174,6 +174,7 @@ router.get("/tokens", (req, res) => {
     merchants: merchants
   });
 });
+
 // ============================================================================
 // CLOVER API ROUTES
 // ============================================================================
@@ -263,7 +264,18 @@ router.get("/orders", async (req, res) => {
       data: response.data,
       timestamp: new Date().toISOString()
     });
-  // Get items from Clover
+
+  } catch (error) {
+    console.error("Orders API error:", error.message);
+    res.status(500).json({
+      success: false,
+      error: "Failed to fetch orders",
+      message: error.response?.data || error.message
+    });
+  }
+});
+
+// Get items from Clover
 router.get("/items", async (req, res) => {
   try {
     const merchantId = req.query.merchant_id || "Q82R0D2NSRR81";
