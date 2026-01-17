@@ -422,9 +422,11 @@ router.get("/test-apikey", async (req, res) => {
 // API Key endpoint (REAL WORKING METHOD)
 router.get("/real-merchant", async (req, res) => {
   try {
+    console.log("🚀 /real-merchant endpoint called");
+    
     const API_KEY = "28f66577-ec74-76be-acac-55256d01dcaa";
     
-    console.log("🚀 Using REAL API key");
+    console.log("🔑 Using API key:", API_KEY.substring(0, 20) + "...");
     
     const response = await axios.get(
       "https://sandbox.dev.clover.com/v3/merchants/Q82R0D2NSRR81",
@@ -436,6 +438,8 @@ router.get("/real-merchant", async (req, res) => {
       }
     );
     
+    console.log("✅ API call successful, status:", response.status);
+    
     res.json({
       success: true,
       message: "API Key method works!",
@@ -444,14 +448,15 @@ router.get("/real-merchant", async (req, res) => {
     });
     
   } catch (error) {
-    console.error("API Key error:", error.message);
-    console.error("Error details:", error.response?.data);
+    console.error("❌ API Key error:", error.message);
+    console.error("Error response:", error.response?.data);
+    console.error("Error status:", error.response?.status);
+    
     res.status(500).json({
       success: false,
       error: "API Key failed",
-      details: error.response?.data || error.message
+      details: error.response?.data || error.message,
+      status: error.response?.status
     });
   }
 });
-
-module.exports = router;
