@@ -33,8 +33,24 @@ app.get("/check-vars", (req, res) => {
 app.use("/auth", authRoutes);
 app.use("/api", apiRoutes);
 
-// Root route
+// ROOT ROUTE - FIXED TO HANDLE OAUTH CALLBACKS
 app.get("/", (req, res) => {
+  const { code, merchant_id, employee_id, client_id } = req.query;
+  
+  // Check if this is an OAuth callback
+  if (code) {
+    console.log("✅ OAuth callback received at root");
+    console.log("Code:", code.substring(0, 20) + "...");
+    console.log("Merchant ID:", merchant_id);
+    console.log("Employee ID:", employee_id);
+    console.log("Client ID:", client_id);
+    
+    // Serve Butter dashboard WITH the code in URL for frontend to process
+    // The frontend will auto-detect ?code= parameter
+    return res.sendFile(path.join(__dirname, "../public/index.html"));
+  }
+  
+  // Normal visit (no OAuth code) - serve regular dashboard
   res.sendFile(path.join(__dirname, "../public/index.html"));
 });
 
@@ -82,4 +98,12 @@ app.listen(PORT, "0.0.0.0", () => {
   if (process.env.NODE_ENV === "production") {
     console.log(`Production URL: ${process.env.SITE_URL || "Not set"}`);
   }
+  
+  console.log("==> Your service is live 🎉");
+  console.log("==> ");
+  console.log("==> ///////////////////////////////////////////////////////////");
+  console.log("==> ");
+  console.log("==> Available at your primary URL https://myserver-wk8h.onrender.com");
+  console.log("==> ");
+  console.log("==> ///////////////////////////////////////////////////////////");
 });
