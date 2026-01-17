@@ -253,6 +253,7 @@
                 <h3>⚙️ API Endpoints</h3>
                 <button class="btn secondary" onclick="testHealth()">Test Health Check</button>
                 <button class="btn secondary" onclick="getApiInfo()">Get API Info</button>
+                <button class="btn secondary" onclick="checkStoredTokens()">Check Stored Tokens</button>
             </div>
         </div>
     </div>
@@ -347,13 +348,19 @@
                 return;
             }
             
+            // Get merchant_id from URL
+            const merchantId = urlParams.get('merchant_id');
+            
             showResult('loading', '🔄 Exchanging...', 'Converting authorization code to access token...');
             
             try {
                 const response = await fetch('/auth/token', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ code: authCode })
+                    body: JSON.stringify({ 
+                        code: authCode,
+                        merchant_id: merchantId  // SEND MERCHANT_ID TO BACKEND
+                    })
                 });
                 
                 const data = await response.json();
@@ -362,9 +369,9 @@
                     document.getElementById('step3').classList.add('completed');
                     updateStatus('token', 'Token obtained');
                     
-                    showResult('success', '✅ Token Obtained!', 'Access token successfully retrieved.', {
+                    showResult('success', '✅ Token Obtained!', data.message || 'Access token successfully retrieved.', {
                         merchant_id: data.merchant_id,
-                        access_token: data.access_token,
+                        token_stored: data.token_stored,
                         expires_in_hours: data.expires_in_hours,
                         timestamp: data.timestamp
                     });
@@ -393,6 +400,16 @@
                 showResult('success', '📋 API Information', 'API endpoints and information', data);
             } catch (error) {
                 showResult('error', '❌ API Info Failed', error.message);
+            }
+        }
+        
+        async function checkStoredTokens() {
+            try {
+                const response = await fetch('/auth/tokens');
+                const data = await response.json();
+                showResult('success', '🔐 Stored Tokens', `Found ${data.count} stored token(s)`, data);
+            } catch (error) {
+                showResult('error', '❌ Tokens Check Failed', error.message);
             }
         }
         
