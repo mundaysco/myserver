@@ -50,7 +50,7 @@ router.get("/callback", (req, res) => {
 // Exchange code for token
 router.post("/token", async (req, res) => {
   try {
-    const { code } = req.body;
+    const { code, merchant_id: incomingMerchantId } = req.body;
 
     if (!code) {
       return res.status(400).json({
@@ -75,10 +75,67 @@ router.post("/token", async (req, res) => {
       }
     });
 
-    const { access_token, merchant_id, expires_in } = response.data;
+    const { access_token, merchant_id: tokenMerchantId, expires_in } = response.data;
 
-    console.log("✅ Token exchange successful for merchant:", merchant_id);
+    console.log("✅ Token exchange successful, access_token received");
 
+    // Determine merchant_id: from token response, request body, or API call
+    let finalMerchantId = tokenMerchantId || incomingMerchantId;
+    
+    // If still no merchant_id, try to get it from Clover API
+    if (!finalMerchantId && access_token) {
+      try {
+        console.log("🔍 Fetching merchant info from Clover API...");
+        const merchantResponse = await axios.get(`https://sandbox.dev.clover.com/v3/merchants/me`, {
+          headers: { 'Authorization': `Bearer ${access_token}` }
+        });
+        
+        if (merchantResponse.data && merchantResponse.data.id) {
+          finalMerchantId = merchantResponse.data.id;
+          console.log(`✅ Found merchant_id from API: ${finalMerchantId}`);
+        }
+      } catch (apiError) {
+        console.log("⚠️ Could not fetch merchant info:", apiError.message);
+      }
+    }
+
+    // Save token securely
+    if (finalMerchantId && access_token) {
+      TokenStorage.saveToken(finalMerchantId, {
+        access_token: access_token,
+        expires_in: expires_in || null
+      });
+      console.log(`🔒 Token securely stored for merchant: ${finalMerchantId}`);
+    } else {
+      console.log("⚠️ Cannot save token: missing merchant_id or access_token");
+      console.log(`   merchant_id: ${finalMerchantId}, has_token: ${!!access_token}`);
+    }
+
+    // Return success WITHOUT full token
+    res.json({
+      success: true,
+      message: "Token exchange successful" + (finalMerchantId ? " and stored securely" : ""),
+      merchant_id: finalMerchantId,
+      token_stored: !!(finalMerchantId && access_token),
+      expires_in_hours: expires_in ? Math.floor(expires_in / 3600) : null,
+      timestamp: new Date().toISOString()
+    });
+
+  } catch (error) {
+    console.error("❌ Token exchange failed:", error.response?.data || error.message);
+
+    res.status(500).json({
+      success: false,
+      error: "Token exchange failed",
+      details: error.response?.data || error.message,
+      troubleshooting: [
+        "1. Authorization codes expire quickly - get a new one",
+        "2. Verify environment variables are set correctly",
+        "3. Check Clover app configuration"
+      ]
+    });
+  }
+});
     // Save token securely
     if (merchant_id && access_token) {
       TokenStorage.saveToken(merchant_id, {
