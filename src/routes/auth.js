@@ -163,5 +163,176 @@ router.get("/tokens", (req, res) => {
     merchants: merchants
   });
 });
+// ============================================================================
+// CLOVER API ROUTES
+// ============================================================================
 
+// Get merchant info from Clover
+router.get("/merchant", async (req, res) => {
+  try {
+    const merchantId = req.query.merchant_id || "Q82R0D2NSRR81";
+    const token = TokenStorage.getToken(merchantId);
+
+    if (!token || !token.access_token) {
+      return res.status(401).json({
+        success: false,
+        error: "No access token found",
+        merchant_id: merchantId,
+        hint: "Please authorize first via /auth/url"
+      });
+    }
+
+    const response = await axios.get(
+      `https://sandbox.dev.clover.com/v3/merchants/${merchantId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token.access_token}`,
+          Accept: "application/json"
+        }
+      }
+    );
+
+    res.json({
+      success: true,
+      merchant_id: merchantId,
+      data: response.data,
+      timestamp: new Date().toISOString()
+    });
+
+  } catch (error) {
+    console.error("Merchant API error:", error.message);
+    res.status(500).json({
+      success: false,
+      error: "Failed to fetch merchant data",
+      message: error.response?.data || error.message
+    });
+  }
+});
+
+// Get orders from Clover
+router.get("/orders", async (req, res) => {
+  try {
+    const merchantId = req.query.merchant_id || "Q82R0D2NSRR81";
+    const token = TokenStorage.getToken(merchantId);
+
+    if (!token || !token.access_token) {
+      return res.status(401).json({ 
+        success: false,
+        error: "No access token found" 
+      });
+    }
+
+    const limit = req.query.limit || 10;
+    const response = await axios.get(
+      `https://sandbox.dev.clover.com/v3/merchants/${merchantId}/orders?limit=${limit}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token.access_token}`,
+          Accept: "application/json"
+        }
+      }
+    );
+
+    res.json({
+      success: true,
+      merchant_id: merchantId,
+      count: response.data.elements?.length || 0,
+      data: response.data,
+      timestamp: new Date().toISOString()
+    });
+
+  } catch (error) {
+    console.error("Orders API error:", error.message);
+    res.status(500).json({
+      success: false,
+      error: "Failed to fetch orders",
+      message: error.response?.data || error.message
+    });
+  }
+});
+
+// Get items from Clover
+router.get("/items", async (req, res) => {
+  try {
+    const merchantId = req.query.merchant_id || "Q82R0D2NSRR81";
+    const token = TokenStorage.getToken(merchantId);
+
+    if (!token || !token.access_token) {
+      return res.status(401).json({ 
+        success: false,
+        error: "No access token found" 
+      });
+    }
+
+    const limit = req.query.limit || 20;
+    const response = await axios.get(
+      `https://sandbox.dev.clover.com/v3/merchants/${merchantId}/items?limit=${limit}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token.access_token}`,
+          Accept: "application/json"
+        }
+      }
+    );
+
+    res.json({
+      success: true,
+      merchant_id: merchantId,
+      count: response.data.elements?.length || 0,
+      data: response.data,
+      timestamp: new Date().toISOString()
+    });
+
+  } catch (error) {
+    console.error("Items API error:", error.message);
+    res.status(500).json({
+      success: false,
+      error: "Failed to fetch items",
+      message: error.response?.data || error.message
+    });
+  }
+});
+
+// Get employees from Clover
+router.get("/employees", async (req, res) => {
+  try {
+    const merchantId = req.query.merchant_id || "Q82R0D2NSRR81";
+    const token = TokenStorage.getToken(merchantId);
+
+    if (!token || !token.access_token) {
+      return res.status(401).json({ 
+        success: false,
+        error: "No access token found" 
+      });
+    }
+
+    const response = await axios.get(
+      `https://sandbox.dev.clover.com/v3/merchants/${merchantId}/employees`,
+      {
+        headers: {
+          Authorization: `Bearer ${token.access_token}`,
+          Accept: "application/json"
+        }
+      }
+    );
+
+    res.json({
+      success: true,
+      merchant_id: merchantId,
+      count: response.data.elements?.length || 0,
+      data: response.data,
+      timestamp: new Date().toISOString()
+    });
+
+  } catch (error) {
+    console.error("Employees API error:", error.message);
+    res.status(500).json({
+      success: false,
+      error: "Failed to fetch employees",
+      message: error.response?.data || error.message
+    });
+  }
+});
+
+module.exports = router;
 module.exports = router;
