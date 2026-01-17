@@ -1,9 +1,10 @@
-require("dotenv").config();
+﻿require("dotenv").config();
 const express = require("express");
 const axios = require("axios");
 
 const app = express();
 app.use(express.json());
+app.use(express.static("public"));
 
 const PORT = process.env.PORT || 3000;
 const APP_ID = process.env.CLOVER_APP_ID;
@@ -12,7 +13,7 @@ const REDIRECT_URI = process.env.REDIRECT_URI;
 
 console.log("=== MAX CLOVER APP ===");
 console.log("App ID:", APP_ID);
-console.log("App Secret:", APP_SECRET ? "✅ Set" : "❌ Missing");
+console.log("App Secret:", APP_SECRET ? "âœ… Set" : "âŒ Missing");
 console.log("Redirect URI:", REDIRECT_URI);
 console.log("======================");
 
@@ -32,12 +33,12 @@ app.get("/", (req, res) => {
     <h1>Max Clover App</h1>
     <div class="box">
       <p><strong>App ID:</strong> ${APP_ID || "Not set"}</p>
-      <p><strong>App Secret:</strong> ${APP_SECRET ? "✅ Set" : "❌ Missing"}</p>
+      <p><strong>App Secret:</strong> ${APP_SECRET ? "âœ… Set" : "âŒ Missing"}</p>
   `;
   
   if (code) {
     html += `
-      <h3>✅ Code Received!</h3>
+      <h3>âœ… Code Received!</h3>
       <p>Code: ${code}</p>
       ${merchant_id ? `<p>Merchant ID: ${merchant_id}</p>` : ''}
       <button class="btn" onclick="exchangeToken()">Get Access Token</button>
@@ -51,14 +52,14 @@ app.get("/", (req, res) => {
           });
           const data = await res.json();
           document.getElementById("result").innerHTML = 
-            data.success ? "<p>✅ Token: " + data.access_token.substring(0, 30) + "...</p>" : 
-                          "<p>❌ Error: " + data.error + "</p>";
+            data.success ? "<p>âœ… Token: " + data.access_token.substring(0, 30) + "...</p>" : 
+                          "<p>âŒ Error: " + data.error + "</p>";
         }
       </script>
     `;
   } else {
     html += `
-      <h3>📝 Setup Instructions:</h3>
+      <h3>ðŸ“ Setup Instructions:</h3>
       <ol>
         <li>Configure Clover Dashboard with callback URL</li>
         <li>Start OAuth flow from Clover App Market</li>
@@ -75,19 +76,19 @@ app.get("/", (req, res) => {
 app.get("/callback", (req, res) => {
   const { code, merchant_id, employee_id, client_id, error } = req.query;
   
-  console.log("📨 OAuth Callback Received:");
+  console.log("ðŸ“¨ OAuth Callback Received:");
   console.log("  Code:", code);
   console.log("  Merchant ID:", merchant_id);
   console.log("  Employee ID:", employee_id);
   console.log("  Client ID:", client_id);
   
   if (error) {
-    console.error("❌ OAuth Error:", error);
+    console.error("âŒ OAuth Error:", error);
     return res.redirect(`/?error=${encodeURIComponent(error)}`);
   }
   
   if (code) {
-    console.log("✅ Authorization successful, redirecting with code");
+    console.log("âœ… Authorization successful, redirecting with code");
     return res.redirect(`/?code=${code}&merchant_id=${merchant_id}`);
   }
   
@@ -106,11 +107,11 @@ app.post("/exchange", async (req, res) => {
       redirect_uri: REDIRECT_URI
     });
     
-    console.log("✅ Token received");
+    console.log("âœ… Token received");
     res.json({ success: true, ...response.data });
     
   } catch (error) {
-    console.error("❌ Exchange failed:", error.response?.data || error.message);
+    console.error("âŒ Exchange failed:", error.response?.data || error.message);
     res.json({ 
       success: false, 
       error: "Exchange failed", 
@@ -120,5 +121,6 @@ app.post("/exchange", async (req, res) => {
 });
 
 app.listen(PORT, "0.0.0.0", () => {
-  console.log("🚀 Server: http://localhost:" + PORT);
+  console.log("ðŸš€ Server: http://localhost:" + PORT);
 });
+
