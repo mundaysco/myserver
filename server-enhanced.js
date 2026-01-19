@@ -6,8 +6,9 @@ const fs = require('fs');
 
 const PORT = process.env.PORT || 3000;
 
-// Your Clover app credentials (replace with real ones)
-const CLIENT_ID = 'YOUR_CLIENT_ID';
+// YOUR CLOVER APP CREDENTIALS
+const CLIENT_ID = 'JD06DKTZ0E7MT';
+const CLIENT_SECRET = 'fd9a48ba-4357-c812-9558-62c27b182680';
 const REDIRECT_URI = 'https://myserver-wk8h.onrender.com/callback';
 
 const server = http.createServer((req, res) => {
@@ -36,11 +37,30 @@ const server = http.createServer((req, res) => {
     if (parsed.pathname === '/auth-url') {
         const authUrl = `https://sandbox.dev.clover.com/oauth/authorize?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=code`;
         res.writeHead(200, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({ url: authUrl, success: true }));
+        res.end(JSON.stringify({ 
+            success: true,
+            url: authUrl,
+            message: '✅ Authorization URL generated',
+            client_id: CLIENT_ID
+        }));
         return;
     }
     
-    // CALLBACK ENDPOINT - THIS IS WHAT FIXES INFINITE LOADING
+    // EXCHANGE CODE FOR TOKEN
+    if (parsed.pathname === '/exchange-token') {
+        const code = parsed.query.code;
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ 
+            success: true, 
+            message: '✅ Token exchange endpoint', 
+            code: code,
+            client_id: CLIENT_ID,
+            next_step: 'POST to Clover API to get actual token'
+        }));
+        return;
+    }
+    
+    // CALLBACK ENDPOINT
     if (parsed.pathname === '/callback') {
         const code = parsed.query.code;
         res.writeHead(200, { 'Content-Type': 'application/json' });
@@ -48,7 +68,8 @@ const server = http.createServer((req, res) => {
             success: true, 
             message: '✅ Callback received!', 
             code: code,
-            next_step: 'Exchange this code for access token'
+            client_id: CLIENT_ID,
+            next_step: 'Go to /exchange-token?code=' + code
         }));
         return;
     }
@@ -60,6 +81,7 @@ const server = http.createServer((req, res) => {
 
 server.listen(PORT, () => {
     console.log(`✅ Server running on port ${PORT}`);
-    console.log(`🔗 Dashboard: http://localhost:${PORT}/`);
-    console.log(`🔗 Test: http://localhost:${PORT}/callback?code=TEST`);
+    console.log(`🔗 Dashboard: https://myserver-wk8h.onrender.com/`);
+    console.log(`🔗 Test Callback: https://myserver-wk8h.onrender.com/callback?code=TEST`);
+    console.log(`🔗 App ID: ${CLIENT_ID}`);
 });

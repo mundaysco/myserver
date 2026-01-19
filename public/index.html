@@ -3,47 +3,80 @@
 <head>
     <title>Butter Clover Dashboard</title>
     <style>
-        body { font-family: Arial; padding: 20px; }
-        .status { padding: 10px; margin: 10px 0; border-radius: 5px; }
-        .ready { background: #d4edda; }
-        .not-ready { background: #f8d7da; }
+        body { font-family: Arial; padding: 20px; max-width: 800px; margin: 0 auto; }
+        .status { padding: 15px; margin: 15px 0; border-radius: 5px; border-left: 5px solid; }
+        .ready { background: #d4edda; border-color: #28a745; }
+        .not-ready { background: #fff3cd; border-color: #ffc107; }
+        .info { background: #d1ecf1; border-color: #17a2b8; }
+        button { padding: 10px 20px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; }
+        button:hover { background: #0056b3; }
+        .credential { background: #f8f9fa; padding: 10px; border-radius: 4px; font-family: monospace; }
     </style>
 </head>
 <body>
     <h1>Butter Smooth Clover Integration</h1>
     
+    <div class="status info">
+        <h3>📊 Deployment Status</h3>
+        <p><strong>Server:</strong> <span id="serverStatus">Checking...</span></p>
+        <p><strong>URL:</strong> <code>https://myserver-wk8h.onrender.com</code></p>
+    </div>
+    
     <div class="status ready">
-        <h3>App Status</h3>
-        <p>✅ Ready</p>
+        <h3>🔑 App Credentials</h3>
+        <p><strong>App ID:</strong> <span class="credential">JD06DKTZ0E7MT</span></p>
+        <p><strong>App Secret:</strong> <span class="credential">fd9a48ba-4357-c812-9558-62c27b182680</span></p>
+        <p><strong>Redirect URI:</strong> <span class="credential">https://myserver-wk8h.onrender.com/callback</span></p>
     </div>
     
     <div class="status not-ready">
-        <h3>Authorization</h3>
-        <p>Not started</p>
-    </div>
-    
-    <h2>Quick Start</h2>
-    
-    <div>
-        <h3>1. Get Authorization URL</h3>
-        <button onclick="getAuthUrl()">Get Authorization URL</button>
-        <div id="authUrl"></div>
+        <h3>⚡ Quick Start</h3>
+        
+        <div style="margin: 20px 0;">
+            <h4>1. Get Authorization URL</h4>
+            <button onclick="getAuthUrl()">Get Authorization URL</button>
+            <div id="authUrl" style="margin-top: 10px;"></div>
+        </div>
+        
+        <div style="margin: 20px 0;">
+            <h4>2. Test Callback Endpoint</h4>
+            <a href="/callback?code=TEST" target="_blank">Test: /callback?code=TEST</a>
+        </div>
     </div>
     
     <script>
-        const API_URL = "https://myserver-wk8h.onrender.com";
+        const API_URL = window.location.origin;
+        
+        // Check server status on load
+        async function checkServerStatus() {
+            try {
+                const response = await fetch(API_URL + '/callback?code=TEST');
+                if (response.ok) {
+                    document.getElementById('serverStatus').innerHTML = '✅ Online';
+                    document.getElementById('serverStatus').style.color = 'green';
+                } else {
+                    document.getElementById('serverStatus').innerHTML = '⚠️ Error';
+                }
+            } catch (error) {
+                document.getElementById('serverStatus').innerHTML = '❌ Offline';
+            }
+        }
         
         async function getAuthUrl() {
             try {
                 const response = await fetch(`${API_URL}/auth-url`);
                 const data = await response.json();
+                const urlBox = `<div class="credential" style="margin-top:10px;"><a href="${data.url}" target="_blank">${data.url}</a></div>`;
                 document.getElementById('authUrl').innerHTML = 
-                    `<a href="${data.url}" target="_blank">${data.url}</a>`;
+                    `<p>${data.message}</p>${urlBox}<p><small>Copy this URL and open in browser to authorize with Clover</small></p>`;
             } catch (error) {
                 document.getElementById('authUrl').innerHTML = 
-                    `Error: ${error.message}`;
+                    `<div style="color:red;">Error: ${error.message}</div>`;
             }
         }
+        
+        // Check status on page load
+        window.onload = checkServerStatus;
     </script>
 </body>
 </html>
